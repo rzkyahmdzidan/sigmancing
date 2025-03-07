@@ -1,7 +1,3 @@
-toko.blade.php
-
-<!DOCTYPE html>
-<html lang="en">
 @extends('user.layouts.app')
 
 <head>
@@ -17,6 +13,7 @@ toko.blade.php
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
+    </script>
     <style>
         #map {
             height: 600px;
@@ -146,24 +143,6 @@ toko.blade.php
             padding: 4px 8px;
             font-size: 12px;
         }
-
-        /* Status badge styling */
-        .status-badge {
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .status-buka {
-            background-color: #d1e7dd;
-            color: #0f5132;
-        }
-
-        .status-tutup {
-            background-color: #f8d7da;
-            color: #842029;
-        }
     </style>
 </head>
 
@@ -192,10 +171,12 @@ toko.blade.php
     </div>
     @include('user.layouts.footer')
 
+
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="{{ asset('js/toko.js') }}"></script>
     <script>
         // Initialize map
         var map;
@@ -258,14 +239,14 @@ toko.blade.php
         }, 100);
 
         // Debug info
-        console.log("Data tokos dari server:");
+        console.log("Data toko dari server:");
         @foreach ($tokos as $toko)
             console.log({
                 id: {{ $toko->id }},
                 nama: "{{ $toko->nama }}",
                 alamat: "{{ $toko->alamat }}",
-                koordinat: "{{ $toko->koordinat }}",
-                status: "{{ $toko->status }}"
+                jam_buka: "{{ $toko->jam_buka }}",
+                jam_tutup: "{{ $toko->jam_tutup }}"
             });
         @endforeach
 
@@ -295,40 +276,97 @@ toko.blade.php
             }
         }
 
-        // Modifikasi fungsi createPopupContent untuk menampilkan info toko
+        // Modifikasi fungsi createPopupContent untuk menambahkan tombol rute
         function createPopupContent(toko, includeDistance = false) {
             let content = '<div class="popup-content" style="min-width: 250px;">' +
                 '<h5 style="font-size: 16px; font-weight: 600; color: #0d6efd; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px;">' +
                 toko.name + '</h5>';
 
-            // Status toko
-            let statusClass = toko.status === 'BUKA' ? 'status-buka' : 'status-tutup';
-            content += '<div style="margin-bottom: 8px;"><span class="status-badge ' + statusClass + '">' +
-                toko.status + '</span></div>';
-
-            // Informasi alamat dengan ikon
+            // Informasi lokasi dengan ikon
             content += '<div style="margin-bottom: 6px;"><i class="bi bi-geo-alt" style="color: #666; width: 20px;"></i> ' +
-                '<span style="color: #444;">' + toko.alamat + '</span></div>';
+                '<span style="color: #444;">' + toko.location + '</span></div>';
 
-            // Informasi no telp dengan ikon
-            if(toko.no_telp) {
-                content += '<div style="margin-bottom: 6px;"><i class="bi bi-telephone" style="color: #666; width: 20px;"></i> ' +
-                    '<span style="color: #444;">' + toko.no_telp + '</span></div>';
-            }
+            // Format jam operasional yang lebih ringkas (menghilangkan detik)
+            let openTimeFormatted = toko.open_time.split(':').slice(0, 2).join('.');
+            let closeTimeFormatted = toko.close_time.split(':').slice(0, 2).join('.');
 
-            // Informasi jam operasional dengan ikon
+            // Informasi jam buka (tanpa status)
             content += '<div style="margin-bottom: 6px;"><i class="bi bi-clock" style="color: #666; width: 20px;"></i> ' +
-                '<span style="color: #444;">' + toko.jam_buka + ' - ' + toko.jam_tutup + '</span></div>';
+                '<span style="color: #444;">' + openTimeFormatted + ' - ' + closeTimeFormatted + '</span></div>';
+
+            // Menambahkan status toko (buka/tutup) di bawah jam operasional
+            const now = new Date();
+            const currentHour = now.getHours();
+            const currentMinute = now.getMinutes();
+            const currentTime = currentHour * 60 + currentMinute; // konversi ke menit
+
+            // Parse jam buka dan tutup
+            const [openHour, openMinute] = toko.open_time.split(':').map(Number);
+            const [closeHour, closeMinute] = toko.close_time.split(':').map(Number);
+
+            const openTime = openHour * 60 + openMinute; // konversi ke menit
+            const closeTime = closeHour * 60 + closeMinute; // konversi ke menit
+
+            // Cek apakah toko sedang buka
+            const isOpen = currentTime >= openTime && currentTime <= closeTime;
+
+            // Tampilkan status dengan warna yang sesuai di bawah jam operasional
+            content += '<div style="margin-bottom: 10px;">' +
+                '<span class="status-badge" style="display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 12px; font-weight: 600; background-color: ' +
+                (isOpen ? '#4CAF50' : '#F44336') + '; color: white;">' +
+                (isOpen ? 'BUKA' : 'TUTUP') + '</span></div>';
+
+            // Informasi telepon jika ada
+            if (toko.phone) {
+                content +=
+                    '<div style="margin-bottom: 6px;"><i class="bi bi-telephone" style="color: #666; width: 20px;"></i> ' +
+                    '<span style="color: #444;">' + toko.phone + '</span></div>';
+            }
 
             // Tambahkan tombol untuk mendapatkan rute
             content += '<div style="margin: 10px 0;">' +
                 '<button onclick="showRouteTo({lat: ' + toko.lat + ', lng: ' + toko.lng + ', name: \'' + toko.name +
-                '\', alamat: \'' + toko.alamat + '\'})" ' +
+                '\', location: \'' + toko.location + '\'})" ' +
                 'class="btn btn-primary btn-sm" style="width: 100%;">' +
                 '<i class="bi bi-signpost"></i> Dapatkan Rute</button></div>';
 
-            // Tambahkan gambar toko
-            if (toko.image) {
+            // Tambahkan deskripsi jika ada
+            if (toko.description) {
+                content += '<div style="margin-bottom: 8px;"><span style="color: #444;">' + toko.description +
+                    '</span></div>';
+            }
+
+            // Buat simple carousel
+            if (toko.images && Array.isArray(toko.images) && toko.images.length > 0) {
+                // Buat container sederhana
+                content += '<div class="simple-carousel" style="margin: 10px 0;">';
+
+                // Tampilkan gambar pertama saja (yang aktif)
+                content += `<img src="${toko.images[0]}" class="carousel-image active" data-index="0"
+                           style="width: 100%; height: 150px; object-fit: cover; border-radius: 4px;">`;
+
+                // Tambahkan navigasi dots
+                if (toko.images.length > 1) {
+                    content += '<div class="carousel-dots" style="text-align: center; margin-top: 5px;">';
+                    for (let i = 0; i < toko.images.length; i++) {
+                        content += `<span class="carousel-dot" data-index="${i}"
+                                  style="display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+                                  background-color: ${i === 0 ? '#0d6efd' : '#ccc'}; margin: 0 3px;"></span>`;
+                    }
+                    content += '</div>';
+
+                    // Tambahkan indikator jumlah gambar
+                    content += `<div class="carousel-indicator" style="text-align: center; font-size: 12px; color: #666; margin: 5px 0;">
+                             </div>`;
+
+                    // Tambahkan data gambar untuk script (tersembunyi)
+                    content += `<div class="carousel-data" style="display:none;"
+                               data-images='${JSON.stringify(toko.images)}' data-total="${toko.images.length}"></div>`;
+                }
+
+                content += '</div>';
+            } else if (toko.image) {
+                // Fallback untuk single image
                 content += '<img src="' + toko.image + '" class="img-fluid rounded my-2" alt="' + toko.name +
                     '" style="max-height: 150px; width: 100%; object-fit: cover;">';
             }
@@ -398,16 +436,16 @@ toko.blade.php
 
                 // Update informasi rute
                 var routeInfoHtml = `
-                <div class="route-info-container">
-                    <h5>${toko.name}</h5>
-                    <p>Jarak: ${distanceString}, Waktu: ${timeString}</p>
-                    <p>Toko pancing di ${toko.alamat}</p>
-                    <div class="route-action-buttons">
-                        <button class="btn btn-primary btn-sm" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${toko.lat},${toko.lng}', '_blank')">Dapatkan Arah</button>
-                        <button class="btn btn-danger btn-sm" onclick="clearRoute()">Batal Rute</button>
-                    </div>
-                </div>
-                `;
+        <div class="route-info-container">
+            <h5>${toko.name}</h5>
+            <p>Jarak: ${distanceString}, Waktu: ${timeString}</p>
+            <p>Toko pancing di sekitar ${toko.location}</p>
+            <div class="route-action-buttons">
+                <button class="btn btn-primary btn-sm" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${toko.lat},${toko.lng}', '_blank')">Dapatkan Arah</button>
+                <button class="btn btn-danger btn-sm" onclick="clearRoute()">Batal Rute</button>
+            </div>
+        </div>
+        `;
 
                 // Tambahkan ke dalam container routing
                 setTimeout(function() {
@@ -416,6 +454,7 @@ toko.blade.php
                 }, 500);
             });
         }
+
 
         // Fungsi untuk menghapus rute
         function clearRoute() {
@@ -432,26 +471,35 @@ toko.blade.php
             // Data toko dari database
             const tokos = [
                 @foreach ($tokos as $toko)
-                    @if ($toko->koordinat)
+                    @if ($toko->latitude && $toko->longitude)
                         {
-                            id: {{ $toko->id }},
                             name: "{{ $toko->nama }}",
-                            alamat: "{{ $toko->alamat }}",
-                            no_telp: "{{ $toko->no_telp }}",
-                            jam_buka: "{{ $toko->jam_buka }}",
-                            jam_tutup: "{{ $toko->jam_tutup }}",
-                            status: "{{ $toko->status }}",
-                            @php
-                                $koordinat = explode(',', $toko->koordinat);
-                                $lat = trim($koordinat[0]);
-                                $lng = trim($koordinat[1]);
-                            @endphp
-                            lat: {{ $lat }},
-                            lng: {{ $lng }},
+                            location: "{{ $toko->alamat }}",
+                            description: "{{ Str::limit($toko->deskripsi, 100) }}",
+                            lat: {{ $toko->latitude }},
+                            lng: {{ $toko->longitude }},
+                            open_time: "{{ $toko->jam_buka }}",
+                            close_time: "{{ $toko->jam_tutup }}",
+                            phone: "{{ $toko->no_telp }}",
                             @if ($toko->gambar)
-                                image: "{{ asset('storage/toko/' . $toko->gambar) }}",
+                                <?php
+                                $gambarArray = json_decode($toko->gambar, true);
+                                $gambarArray = is_array($gambarArray) ? $gambarArray : [];
+                                ?>
+                                @if (count($gambarArray) > 0)
+                                    image: "{{ asset('images/toko/' . $gambarArray[0]) }}",
+                                    images: [
+                                        @foreach ($gambarArray as $img)
+                                            "{{ asset('images/toko/' . $img) }}",
+                                        @endforeach
+                                    ],
+                                @else
+                                    image: null,
+                                    images: [],
+                                @endif
                             @else
                                 image: null,
+                                images: [],
                             @endif
                             index: {{ $loop->index }}
                         },
@@ -469,42 +517,42 @@ toko.blade.php
         // Ambil data toko dari database dan tampilkan sebagai marker
         @if (isset($tokos) && count($tokos) > 0)
             @foreach ($tokos as $toko)
-                @if ($toko->koordinat)
-                    @php
-                        $koordinat = explode(',', $toko->koordinat);
-                        $lat = trim($koordinat[0]);
-                        $lng = trim($koordinat[1]);
-                    @endphp
-                    // Data toko untuk marker
+                @if ($toko->latitude && $toko->longitude)
+                    // Bagian pembuatan tokosData yang benar
                     var tokoData = {
-                        id: {{ $toko->id }},
                         name: "{{ $toko->nama }}",
-                        alamat: "{{ $toko->alamat }}",
-                        no_telp: "{{ $toko->no_telp }}",
-                        jam_buka: "{{ $toko->jam_buka }}",
-                        jam_tutup: "{{ $toko->jam_tutup }}",
-                        status: "{{ $toko->status }}",
-                        lat: {{ $lat }},
-                        lng: {{ $lng }},
+                        location: "{{ $toko->alamat }}",
+                        description: "{{ Str::limit($toko->deskripsi, 100) }}",
+                        lat: {{ $toko->latitude }},
+                        lng: {{ $toko->longitude }},
+                        open_time: "{{ $toko->jam_buka }}",
+                        close_time: "{{ $toko->jam_tutup }}",
+                        phone: "{{ $toko->no_telp }}",
                         @if ($toko->gambar)
-                            image: "{{ asset('storage/toko/' . $toko->gambar) }}",
+                            <?php
+                            $gambarArray = json_decode($toko->gambar, true);
+                            $gambarArray = is_array($gambarArray) ? $gambarArray : [];
+                            ?>
+                            @if (count($gambarArray) > 0)
+                                image: "{{ asset('images/toko/' . $gambarArray[0]) }}",
+                                images: [
+                                    @foreach ($gambarArray as $img)
+                                        "{{ asset('images/toko/' . $img) }}",
+                                    @endforeach
+                                ],
+                            @else
+                                image: null,
+                                images: [],
+                            @endif
                         @else
                             image: null,
+                            images: [],
                         @endif
                     };
-
                     // Buat popup content tanpa jarak awalnya
                     var initialPopupContent = createPopupContent(tokoData, false);
 
-                    // Tentukan icon berdasarkan status toko
-                    var tokoIcon = L.icon({
-                        iconUrl: tokoData.status === 'BUKA' ? "{{ asset('images/marker-green.png') }}" : "{{ asset('images/marker-red.png') }}",
-                        iconSize: [30, 30],
-                        iconAnchor: [15, 30],
-                        popupAnchor: [0, -30]
-                    });
-
-                    var marker = L.marker([tokoData.lat, tokoData.lng], {icon: tokoIcon})
+                    var marker = L.marker([tokoData.lat, tokoData.lng])
                         .bindPopup(initialPopupContent, {
                             minWidth: 250,
                             maxWidth: 300
@@ -549,6 +597,99 @@ toko.blade.php
         @else
             console.log("Tidak ada data toko yang tersedia.");
         @endif
+
+        // Fungsi setup carousel - dalam scope global
+        function setupCarousel() {
+            // Fungsi untuk menghandle klik dot
+            const dots = document.querySelectorAll('.carousel-dot');
+            if (!dots.length) return;
+
+            dots.forEach(dot => {
+                dot.addEventListener('click', function() {
+                    const dotIndex = parseInt(this.dataset.index);
+                    const carousel = this.closest('.simple-carousel');
+                    if (!carousel) return;
+
+                    updateCarouselImage(carousel, dotIndex);
+                });
+            });
+
+            // Setup touch events untuk image swipe
+            const carouselImages = document.querySelectorAll('.carousel-image');
+            carouselImages.forEach(img => {
+                let startX, endX;
+
+                img.addEventListener('touchstart', function(e) {
+                    startX = e.changedTouches[0].clientX;
+                }, {
+                    passive: true
+                });
+
+                img.addEventListener('touchend', function(e) {
+                    endX = e.changedTouches[0].clientX;
+                    handleSwipe(this, startX, endX);
+                }, {
+                    passive: true
+                });
+            });
+        }
+
+        // Fungsi untuk handle swipe
+        function handleSwipe(img, startX, endX) {
+            if (!startX || !endX) return;
+
+            const carousel = img.closest('.simple-carousel');
+            if (!carousel) return;
+
+            const currentIndex = parseInt(img.dataset.index);
+            const dataElement = carousel.querySelector('.carousel-data');
+            if (!dataElement) return;
+
+            const totalImages = parseInt(dataElement.dataset.total || 0);
+            if (totalImages <= 1) return;
+
+            const diff = startX - endX;
+            const threshold = 50; // minimal jarak swipe
+            let newIndex = currentIndex;
+
+            if (Math.abs(diff) < threshold) return;
+
+            if (diff > 0) {
+                // Swipe kiri (next)
+                newIndex = (currentIndex + 1) % totalImages;
+            } else {
+                // Swipe kanan (prev)
+                newIndex = (currentIndex - 1 + totalImages) % totalImages;
+            }
+
+            updateCarouselImage(carousel, newIndex);
+        }
+
+        // Fungsi untuk update gambar carousel
+        function updateCarouselImage(carousel, newIndex) {
+            const dataElement = carousel.querySelector('.carousel-data');
+            if (!dataElement) return;
+
+            try {
+                const images = JSON.parse(dataElement.dataset.images);
+                if (!images || !images.length) return;
+
+                const carouselImage = carousel.querySelector('.carousel-image');
+                if (!carouselImage) return;
+
+                // Ubah src image
+                carouselImage.src = images[newIndex];
+                carouselImage.dataset.index = newIndex;
+
+                // Update dots
+                const dots = carousel.querySelectorAll('.carousel-dot');
+                dots.forEach((dot, i) => {
+                    dot.style.backgroundColor = i === newIndex ? '#0d6efd' : '#ccc';
+                });
+            } catch (e) {
+                console.error('Error updating carousel:', e);
+            }
+        }
 
         // Fungsi untuk mendapatkan lokasi pengguna
         document.getElementById('getLocationBtn').addEventListener('click', function() {
@@ -656,4 +797,3 @@ toko.blade.php
 </body>
 
 </html>
-
