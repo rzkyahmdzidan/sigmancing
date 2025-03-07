@@ -10,138 +10,102 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-
-    </script>
     <style>
+        /* Custom Styles */
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Poppins', sans-serif;
+        }
+
         #map {
-            height: 600px;
-            width: 100%;
-            border: none !important;
+            height: 500px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
         }
 
-        /* Styling untuk kontrol routing */
-        .leaflet-routing-container {
+        .control-card {
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
             background-color: white;
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
-            max-width: 350px;
-            max-height: 300px;
-            overflow-y: auto;
         }
 
-        .leaflet-routing-alt {
-            max-height: none !important;
+        .btn-location {
+            background: linear-gradient(90deg, #0d6efd, #0096c7);
+            border: none;
+            border-radius: 30px;
+            padding: 10px 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3);
         }
 
-        .leaflet-routing-geocoder input {
-            width: 100%;
-            padding: 5px;
-        }
-
-        .route-info-container {
-            background-color: white;
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 10px;
-            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
-        }
-
-        .route-action-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .leaflet-container {
-            border: none !important;
-            box-shadow: none !important;
-        }
-
-        .popup-content h5 {
-            color: #333;
-            margin-bottom: 8px;
-        }
-
-        .popup-content p {
-            margin-bottom: 5px;
-            font-size: 14px;
-        }
-
-        .popup-content img {
-            max-width: 100%;
-            border-radius: 4px;
-            margin: 8px 0;
-        }
-
-        /* CSS untuk carousel swipe */
-        .carousel-container {
-            position: relative;
-            overflow: hidden;
-            touch-action: pan-y;
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            margin: 10px 0;
-        }
-
-        .carousel-slides {
-            display: flex;
-            transition: transform 0.3s ease;
-            width: 100%;
-        }
-
-        .carousel-slide {
-            min-width: 100%;
-            flex: 0 0 auto;
-        }
-
-        .carousel-indicators {
-            text-align: center;
-            margin-top: 8px;
-        }
-
-        .carousel-dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            margin: 0 3px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        /* Memperbaiki masalah scrolling pada leaflet popup */
-        .leaflet-popup-content {
-            margin: 13px;
-            touch-action: pan-y;
-        }
-
-        /* Style untuk control layer */
-        .leaflet-control-layers {
-            border-radius: 4px;
-            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
-        }
-
-        .leaflet-control-layers-toggle {
-            background-size: 20px 20px;
-        }
-
-        .map-type-control {
-            background-color: #fff;
-            border-radius: 4px;
-            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
-            padding: 8px 10px;
-            margin-bottom: 10px;
+        .btn-location:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(13, 110, 253, 0.4);
         }
 
         .map-type-control .btn {
-            margin-right: 5px;
-            padding: 4px 8px;
-            font-size: 12px;
+            border-radius: 20px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .map-type-control .btn.active {
+            background-color: #0d6efd;
+            color: white;
+        }
+
+        /* Styling untuk popup */
+        .leaflet-popup-content-wrapper {
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .leaflet-popup-content {
+            margin: 13px 19px;
+        }
+
+        /* Animasi untuk marker */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .pulse-animation {
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Custom responsive styles */
+        @media (max-width: 768px) {
+            #map {
+                height: 400px;
+            }
+
+            .hero-title {
+                font-size: 1.8rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
@@ -149,34 +113,127 @@
 <body>
     <!-- Include Navbar -->
     @include('user.layouts.navbar')
-    <div class="container mt-4">
-        <h2 class="text-center mb-3">Peta Toko Pancing</h2>
-        <p class="text-center mb-4">Berikut adalah informasi lokasi toko pancing terbaik di sekitar Anda.</p>
 
-        <div class="card shadow-sm mb-4" style="border: none; box-shadow: none;">
-            <div class="card-body" style="border: none; padding: 0;">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <button class="btn btn-primary" id="getLocationBtn">
-                        <i class="bi bi-geo-alt"></i> Ambil Lokasi Saya
+    <!-- Hero Section -->
+    <div class="hero-section"
+        style="background: #ffffff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-bottom: 1px solid #eee;">
+        <div class="container text-center" data-aos="fade-down">
+            <i class="bi bi-compass fishing-icon text-primary"></i>
+            <h1 class="hero-title text-dark">Peta Toko Pancing</h1>
+            <p class="hero-subtitle text-dark">Temukan toko pancing terbaik di sekitar Anda dengan informasi lengkap dan
+                petunjuk arah.</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Control Panel Card -->
+        <div class="control-card p-3 mb-4" data-aos="fade-up">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <button class="btn btn-location" id="getLocationBtn">
+                    <i class="bi bi-geo-alt-fill me-2"></i> Ambil Lokasi Saya
+                </button>
+                <div class="map-type-control mt-2 mt-md-0">
+                    <button class="btn btn-sm btn-outline-primary active me-2" id="standardMapBtn">
+                        <i class="bi bi-map me-1"></i> Peta Standar
                     </button>
-                    <div class="map-type-control">
-                        <button class="btn btn-sm btn-outline-secondary active" id="standardMapBtn">Peta
-                            Standar</button>
-                        <button class="btn btn-sm btn-outline-secondary" id="satelliteMapBtn">Satelit</button>
+                    <button class="btn btn-sm btn-outline-primary" id="satelliteMapBtn">
+                        <i class="bi bi-globe me-1"></i> Satelit
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map Card -->
+        <div class="card shadow-sm rounded-4" data-aos="zoom-in">
+            <div class="card-body p-0">
+                <div id="map"></div>
+                <div class="map-info bg-light p-3 rounded-bottom-4">
+                    <div class="row text-center">
+                        <div class="col-md-4 mb-2 mb-md-0">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <i class="bi bi-shop text-primary me-2 fs-4"></i>
+                                <div class="text-start">
+                                    <small class="text-muted d-block">Jumlah Toko</small>
+                                    <span class="fw-bold">{{ count($tokos) }} Toko</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-2 mb-md-0">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <i class="bi bi-geo-alt text-danger me-2 fs-4"></i>
+                                <div class="text-start">
+                                    <small class="text-muted d-block">Area Cakupan</small>
+                                    <span class="fw-bold">Sekitar Anda</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <i class="bi bi-info-circle text-success me-2 fs-4"></i>
+                                <div class="text-start">
+                                    <small class="text-muted d-block">Informasi Toko</small>
+                                    <span class="fw-bold">Lengkap & Akurat</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div id="map" style="border: none;"></div>
+            </div>
+        </div>
+
+        <!-- Tips Section -->
+        <div class="card mt-4 mb-4 border-0 bg-light shadow-sm rounded-4" data-aos="fade-up">
+            <div class="card-body">
+                <h5 class="card-title fw-bold text-primary">
+                    <i class="bi bi-lightbulb-fill me-2"></i> Tips Mencari Toko Pancing
+                </h5>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="d-flex mb-3">
+                            <div class="me-3 text-primary fs-3">
+                                <i class="bi bi-geo-alt-fill"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold">Gunakan Fitur Lokasi</h6>
+                                <p class="small text-muted">Aktifkan lokasi Anda untuk mendapatkan rekomendasi toko
+                                    pancing terdekat.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex mb-3">
+                            <div class="me-3 text-primary fs-3">
+                                <i class="bi bi-signpost-split-fill"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold">Dapatkan Rute</h6>
+                                <p class="small text-muted">Klik pada toko untuk mendapatkan petunjuk arah menuju
+                                    lokasi.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    @include('user.layouts.footer')
 
+    @include('user.layouts.footer')
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Leaflet Routing Machine -->
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+    <!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
+        // Initialize AOS animation
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+
         // Initialize map
         var map;
         var userMarker; // Variabel untuk menyimpan marker lokasi pengguna
@@ -184,6 +241,7 @@
         var userLat = null; // Variabel untuk menyimpan latitude pengguna
         var userLng = null; // Variabel untuk menyimpan longitude pengguna
         var routingControl;
+
 
         // Definisikan base layers
         var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -194,7 +252,7 @@
         // Layer satelit dari Esri
         var satelliteLayer = L.tileLayer(
             'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                maxZoom: 17, // Ubah dari 19 ke 17
+                maxZoom: 17,
                 attribution: 'Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
             });
 
@@ -275,23 +333,26 @@
             }
         }
 
-        // Modifikasi fungsi createPopupContent untuk menambahkan tombol rute
+        // Modifikasi fungsi createPopupContent untuk tampilan yang lebih menarik
         function createPopupContent(toko, includeDistance = false) {
-            let content = '<div class="popup-content" style="min-width: 250px;">' +
-                '<h5 style="font-size: 16px; font-weight: 600; color: #0d6efd; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px;">' +
+            let content = '<div class="popup-content" style="min-width: 260px;">' +
+                '<h5 style="font-size: 17px; font-weight: 700; color: #0d6efd; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 8px;">' +
                 toko.name + '</h5>';
 
             // Informasi lokasi dengan ikon
-            content += '<div style="margin-bottom: 6px;"><i class="bi bi-geo-alt" style="color: #666; width: 20px;"></i> ' +
-                '<span style="color: #444;">' + toko.location + '</span></div>';
+            content += '<div style="margin-bottom: 8px; display: flex;">' +
+                '<i class="bi bi-geo-alt-fill" style="color: #dc3545; min-width: 24px; font-size: 16px;"></i> ' +
+                '<span style="color: #333; font-size: 14px;">' + toko.location + '</span></div>';
 
             // Format jam operasional yang lebih ringkas (menghilangkan detik)
             let openTimeFormatted = toko.open_time.split(':').slice(0, 2).join('.');
             let closeTimeFormatted = toko.close_time.split(':').slice(0, 2).join('.');
 
             // Informasi jam buka (tanpa status)
-            content += '<div style="margin-bottom: 6px;"><i class="bi bi-clock" style="color: #666; width: 20px;"></i> ' +
-                '<span style="color: #444;">' + openTimeFormatted + ' - ' + closeTimeFormatted + '</span></div>';
+            content += '<div style="margin-bottom: 8px; display: flex;">' +
+                '<i class="bi bi-clock-fill" style="color: #198754; min-width: 24px; font-size: 16px;"></i> ' +
+                '<span style="color: #333; font-size: 14px;">' + openTimeFormatted + ' - ' + closeTimeFormatted +
+                '</span></div>';
 
             // Menambahkan status toko (buka/tutup) di bawah jam operasional
             const now = new Date();
@@ -309,54 +370,57 @@
             // Cek apakah toko sedang buka
             const isOpen = currentTime >= openTime && currentTime <= closeTime;
 
-            // Tampilkan status dengan warna yang sesuai di bawah jam operasional
-            content += '<div style="margin-bottom: 10px;">' +
-                '<span class="status-badge" style="display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 12px; font-weight: 600; background-color: ' +
-                (isOpen ? '#4CAF50' : '#F44336') + '; color: white;">' +
+            // Tampilkan status dengan warna yang sesuai
+            content += '<div style="display: flex; margin-bottom: 12px; align-items: center;">' +
+                '<i class="bi bi-shop" style="color: ' + (isOpen ? '#198754' : '#dc3545') +
+                '; min-width: 24px; font-size: 16px;"></i> ' +
+                '<span class="status-badge" style="display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; background-color: ' +
+                (isOpen ? '#d1e7dd' : '#f8d7da') + '; color: ' + (isOpen ? '#0f5132' : '#842029') + ';">' +
                 (isOpen ? 'BUKA' : 'TUTUP') + '</span></div>';
 
             // Informasi telepon jika ada
             if (toko.phone) {
                 content +=
-                    '<div style="margin-bottom: 6px;"><i class="bi bi-telephone" style="color: #666; width: 20px;"></i> ' +
-                    '<span style="color: #444;">' + toko.phone + '</span></div>';
+                    '<div style="margin-bottom: 8px; display: flex;">' +
+                    '<i class="bi bi-telephone-fill" style="color: #0d6efd; min-width: 24px; font-size: 16px;"></i> ' +
+                    '<span style="color: #333; font-size: 14px;">' + toko.phone + '</span></div>';
             }
 
-            // Tambahkan tombol untuk mendapatkan rute
-            content += '<div style="margin: 10px 0;">' +
+            // Tambahkan tombol untuk mendapatkan rute dengan styling lebih menarik
+            content += '<div style="margin: 15px 0;">' +
                 '<button onclick="showRouteTo({lat: ' + toko.lat + ', lng: ' + toko.lng + ', name: \'' + toko.name +
                 '\', location: \'' + toko.location + '\'})" ' +
-                'class="btn btn-primary btn-sm" style="width: 100%;">' +
-                '<i class="bi bi-signpost"></i> Dapatkan Rute</button></div>';
+                'class="btn btn-primary w-100 rounded-pill shadow-sm" style="font-weight: 600; padding: 8px 15px;">' +
+                '<i class="bi bi-signpost-2-fill me-2"></i> Dapatkan Rute</button></div>';
 
             // Tambahkan deskripsi jika ada
             if (toko.description) {
-                content += '<div style="margin-bottom: 8px;"><span style="color: #444;">' + toko.description +
-                    '</span></div>';
+                content +=
+                    '<div style="margin: 12px 0; padding: 10px; background-color: #f8f9fa; border-radius: 8px; border-left: 3px solid #0d6efd;">' +
+                    '<span style="color: #495057; font-size: 13px;">' + toko.description + '</span></div>';
             }
 
-            // Buat simple carousel
+            // Buat carousel gambar yang lebih menarik
             if (toko.images && Array.isArray(toko.images) && toko.images.length > 0) {
-                // Buat container sederhana
-                content += '<div class="simple-carousel" style="margin: 10px 0;">';
+                // Buat container dengan style yang lebih baik
+                content +=
+                    '<div class="simple-carousel" style="margin: 12px 0; border-radius: 10px; overflow: hidden; box-shadow: 0 3px 10px rgba(0,0,0,0.1);">';
 
                 // Tampilkan gambar pertama saja (yang aktif)
                 content += `<img src="${toko.images[0]}" class="carousel-image active" data-index="0"
-                           style="width: 100%; height: 150px; object-fit: cover; border-radius: 4px;">`;
+                           style="width: 100%; height: 160px; object-fit: cover;">`;
 
-                // Tambahkan navigasi dots
+                // Tambahkan navigasi dots yang lebih menarik
                 if (toko.images.length > 1) {
-                    content += '<div class="carousel-dots" style="text-align: center; margin-top: 5px;">';
+                    content +=
+                        '<div class="carousel-dots" style="text-align: center; margin: 8px 0; position: relative; bottom: 5px;">';
                     for (let i = 0; i < toko.images.length; i++) {
-                        content += `<span class="carousel-dot" data-index="${i}"
+                        content +=
+                            `<span class="carousel-dot" data-index="${i}"
                                   style="display: inline-block; width: 8px; height: 8px; border-radius: 50%;
-                                  background-color: ${i === 0 ? '#0d6efd' : '#ccc'}; margin: 0 3px;"></span>`;
+                                  background-color: ${i === 0 ? '#0d6efd' : '#dee2e6'}; margin: 0 3px; transition: all 0.3s ease;"></span>`;
                     }
                     content += '</div>';
-
-                    // Tambahkan indikator jumlah gambar
-                    content += `<div class="carousel-indicator" style="text-align: center; font-size: 12px; color: #666; margin: 5px 0;">
-                             </div>`;
 
                     // Tambahkan data gambar untuk script (tersembunyi)
                     content += `<div class="carousel-data" style="display:none;"
@@ -365,18 +429,22 @@
 
                 content += '</div>';
             } else if (toko.image) {
-                // Fallback untuk single image
-                content += '<img src="' + toko.image + '" class="img-fluid rounded my-2" alt="' + toko.name +
-                    '" style="max-height: 150px; width: 100%; object-fit: cover;">';
+                // Fallback untuk single image dengan styling yang lebih baik
+                content += '<img src="' + toko.image + '" class="img-fluid rounded my-2 shadow-sm" alt="' + toko.name +
+                    '" style="max-height: 160px; width: 100%; object-fit: cover;">';
             }
 
-            // Jarak dari lokasi pengguna
+            // Jarak dari lokasi pengguna dengan styling yang lebih menarik
             if (includeDistance && userLat !== null && userLng !== null) {
                 const distance = getDistance(userLat, userLng, toko.lat, toko.lng);
                 const distanceText = formatDistance(distance);
-                content += '<div style="margin-top: 8px; border-top: 1px solid #ddd; padding-top: 8px;">' +
-                    '<strong style="font-size: 13px;">Jarak dari lokasi Anda:</strong>' +
-                    '<div style="font-size: 14px; color: #0d6efd; font-weight: 600;">' + distanceText + '</div></div>';
+                content += '<div style="margin-top: 12px; border-top: 1px solid #e9ecef; padding-top: 12px;">' +
+                    '<div style="display: flex; align-items: center;">' +
+                    '<i class="bi bi-pin-map-fill me-2" style="color: #6c757d; font-size: 16px;"></i>' +
+                    '<span style="font-size: 13px; color: #495057;">Jarak dari lokasi Anda:</span>' +
+                    '</div>' +
+                    '<div style="font-size: 18px; color: #0d6efd; font-weight: 700; margin-top: 5px; text-align: center;">' +
+                    distanceText + '</div></div>';
             }
 
             content += '</div>';
@@ -405,8 +473,9 @@
                 routeWhileDragging: true,
                 lineOptions: {
                     styles: [{
-                        color: 'blue',
-                        weight: 4
+                        color: '#0d6efd',
+                        weight: 5,
+                        opacity: 0.7
                     }]
                 },
                 createMarker: function() {
@@ -433,27 +502,47 @@
                 // Format jarak
                 var distanceString = (summary.totalDistance / 1000).toFixed(1) + ' km';
 
-                // Update informasi rute
+                // Update informasi rute dengan desain yang lebih menarik
                 var routeInfoHtml = `
-        <div class="route-info-container">
-            <h5>${toko.name}</h5>
-            <p>Jarak: ${distanceString}, Waktu: ${timeString}</p>
-            <p>Toko pancing di sekitar ${toko.location}</p>
-            <div class="route-action-buttons">
-                <button class="btn btn-primary btn-sm" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${toko.lat},${toko.lng}', '_blank')">Dapatkan Arah</button>
-                <button class="btn btn-danger btn-sm" onclick="clearRoute()">Batal Rute</button>
-            </div>
-        </div>
-        `;
+                <div class="route-info-container p-3 bg-white rounded shadow-sm">
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="bi bi-shop-window text-primary me-2 fs-4"></i>
+                        <h5 class="mb-0 fw-bold">${toko.name}</h5>
+                    </div>
+                    <div class="route-details bg-light p-2 rounded-3 my-2">
+                        <div class="d-flex justify-content-between">
+                            <div class="text-center px-2">
+                                <i class="bi bi-rulers text-secondary"></i>
+                                <div class="fs-5 fw-bold text-primary">${distanceString}</div>
+                                <small class="text-muted">Jarak</small>
+                            </div>
+                            <div class="border-start"></div>
+                            <div class="text-center px-2">
+                                <i class="bi bi-stopwatch text-secondary"></i>
+                                <div class="fs-5 fw-bold text-primary">${timeString}</div>
+                                <small class="text-muted">Waktu</small>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="small text-muted mb-2">Lokasi: ${toko.location}</p>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-primary rounded-pill w-100" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${toko.lat},${toko.lng}', '_blank')">
+                            <i class="bi bi-google me-1"></i> Google Maps
+                        </button>
+                        <button class="btn btn-outline-danger rounded-pill" onclick="clearRoute()">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                </div>
+                `;
 
-                // Tambahkan ke dalam container routing
+                // Tambahkan ke dalam container routing dengan delay
                 setTimeout(function() {
                     document.querySelector('.leaflet-routing-container').insertAdjacentHTML('beforeend',
                         routeInfoHtml);
                 }, 500);
             });
         }
-
 
         // Fungsi untuk menghapus rute
         function clearRoute() {
@@ -551,6 +640,7 @@
                     // Buat popup content tanpa jarak awalnya
                     var initialPopupContent = createPopupContent(tokoData, false);
 
+                    // Gunakan custom icon untuk toko
                     var marker = L.marker([tokoData.lat, tokoData.lng])
                         .bindPopup(initialPopupContent, {
                             minWidth: 250,
@@ -563,6 +653,9 @@
                     // Event listener untuk popup
                     marker.on('popupopen', function() {
                         setTimeout(function() {
+                            // Setup carousel ketika popup dibuka
+                            setupCarousel();
+
                             const routeBtn = document.querySelector('.leaflet-popup-content button');
                             if (routeBtn) {
                                 routeBtn.addEventListener('click', function() {
@@ -683,7 +776,7 @@
                 // Update dots
                 const dots = carousel.querySelectorAll('.carousel-dot');
                 dots.forEach((dot, i) => {
-                    dot.style.backgroundColor = i === newIndex ? '#0d6efd' : '#ccc';
+                    dot.style.backgroundColor = i === newIndex ? '#0d6efd' : '#dee2e6';
                 });
             } catch (e) {
                 console.error('Error updating carousel:', e);
@@ -709,16 +802,26 @@
                             map.removeLayer(userMarker);
                         }
 
-                        // Tambahkan marker baru
+                        // Tambahkan marker baru dengan custom icon dan efek animasi
                         userMarker = L.marker([userLat, userLng], {
                             title: 'Lokasi Anda'
                         }).addTo(map);
 
-                        // Tambahkan popup ke marker
-                        userMarker.bindPopup('Anda berada di sini!').openPopup();
+                        // Tambahkan popup ke marker dengan desain yang lebih menarik
+                        userMarker.bindPopup(
+                            '<div class="text-center p-2">' +
+                            '<i class="bi bi-person-fill text-primary fs-4"></i>' +
+                            '<h6 class="fw-bold mb-0 mt-1">Lokasi Anda</h6>' +
+                            '<p class="text-muted small mb-0">Koordinat: ' + userLat.toFixed(4) + ', ' +
+                            userLng.toFixed(4) + '</p>' +
+                            '</div>'
+                        ).openPopup();
 
-                        // Pindahkan view peta ke lokasi pengguna
-                        map.setView([userLat, userLng], 15);
+                        // Pindahkan view peta ke lokasi pengguna dengan animasi
+                        map.flyTo([userLat, userLng], 15, {
+                            animate: true,
+                            duration: 1.5
+                        });
 
                         // Update semua popup dengan informasi jarak
                         updateAllPopupsWithDistance();
@@ -726,10 +829,13 @@
                         // Cari toko terdekat dan buka popup-nya
                         findNearestToko(userLat, userLng);
 
-                        // Reset tombol
+                        // Reset tombol dengan animasi
                         document.getElementById('getLocationBtn').innerHTML =
-                            '<i class="bi bi-geo-alt"></i> Ambil Lokasi Saya';
+                            '<i class="bi bi-geo-alt-fill me-2"></i> Ambil Lokasi Saya';
                         document.getElementById('getLocationBtn').disabled = false;
+
+                        // Tambahkan notifikasi sukses
+                        showNotification('success', 'Lokasi berhasil ditemukan!');
                     },
                     function(error) {
                         // Handle error
@@ -748,11 +854,13 @@
                                 errorMessage = "Terjadi kesalahan yang tidak diketahui.";
                                 break;
                         }
-                        alert(errorMessage);
+
+                        // Tampilkan pesan error dengan notifikasi
+                        showNotification('error', errorMessage);
 
                         // Reset tombol
                         document.getElementById('getLocationBtn').innerHTML =
-                            '<i class="bi bi-geo-alt"></i> Ambil Lokasi Saya';
+                            '<i class="bi bi-geo-alt-fill me-2"></i> Ambil Lokasi Saya';
                         document.getElementById('getLocationBtn').disabled = false;
                     }, {
                         enableHighAccuracy: true,
@@ -761,9 +869,34 @@
                     }
                 );
             } else {
-                alert("Geolocation tidak didukung oleh browser Anda.");
+                showNotification('error', "Geolocation tidak didukung oleh browser Anda.");
             }
         });
+
+        // Fungsi untuk menampilkan notifikasi
+        function showNotification(type, message) {
+            // Buat elemen notifikasi
+            const notification = document.createElement('div');
+            notification.className = 'notification ' + type;
+            notification.innerHTML = `
+    <div class="alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show shadow-sm" role="alert"
+         style="position: fixed; top: 20px; right: 20px; z-index: 9999; min-width: 300px; border-radius: 10px;">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-${type === 'success' ? 'check-circle' : 'exclamation-circle'}-fill me-2 fs-4"></i>
+            <div>${message}</div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+`;
+
+            // Tambahkan ke body
+            document.body.appendChild(notification);
+
+            // Hapus setelah 5 detik
+            setTimeout(() => {
+                notification.remove();
+            }, 5000);
+        }
 
         // Fungsi untuk menemukan toko terdekat
         function findNearestToko(userLat, userLng) {
@@ -790,6 +923,10 @@
             if (nearestToko && nearestMarkerIndex >= 0) {
                 // Buka popup marker terdekat
                 tokoMarkers[nearestMarkerIndex].openPopup();
+
+                // Tambahkan notifikasi
+                const distanceText = formatDistance(nearestDistance);
+                showNotification('success', `Toko terdekat ditemukan! Jarak: ${distanceText}`);
             }
         }
     </script>

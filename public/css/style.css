@@ -63,6 +63,162 @@
     .hero .btn:hover {
         background-color: #FF3B3B;
     }
+    
+    .hero-section {
+        background-color: #ffffff;
+        padding: 2rem 0;
+        margin-bottom: 30px;
+    }
+    
+    .hero-title {
+        font-weight: 700;
+        font-size: 2.2rem;
+        color: #212529;
+        margin-bottom: 0.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.1rem;
+        color: #495057;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+    
+    .fishing-icon {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        color: #0d6efd;
+    }
+    /*toko blade  */
+    
+    #map {
+        height: 600px;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+    
+    .leaflet-routing-container {
+        background-color: white;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+        max-width: 350px;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    
+    .leaflet-routing-alt {
+        max-height: none !important;
+    }
+    
+    .leaflet-routing-geocoder input {
+        width: 100%;
+        padding: 5px;
+    }
+    
+    .route-info-container {
+        background-color: white;
+        padding: 10px;
+        border-radius: 5px;
+        margin-top: 10px;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+    }
+    
+    .route-action-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+    }
+    
+    .leaflet-container {
+        border: none !important;
+        box-shadow: none !important;
+    }
+    
+    .popup-content h5 {
+        color: #333;
+        margin-bottom: 8px;
+    }
+    
+    .popup-content p {
+        margin-bottom: 5px;
+        font-size: 14px;
+    }
+    
+    .popup-content img {
+        max-width: 100%;
+        border-radius: 4px;
+        margin: 8px 0;
+    }
+    /* CSS untuk carousel swipe */
+    
+    .carousel-container {
+        position: relative;
+        overflow: hidden;
+        touch-action: pan-y;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        margin: 10px 0;
+    }
+    
+    .carousel-slides {
+        display: flex;
+        transition: transform 0.3s ease;
+        width: 100%;
+    }
+    
+    .carousel-slide {
+        min-width: 100%;
+        flex: 0 0 auto;
+    }
+    
+    .carousel-indicators {
+        text-align: center;
+        margin-top: 8px;
+    }
+    
+    .carousel-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin: 0 3px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    /* Memperbaiki masalah scrolling pada leaflet popup */
+    
+    .leaflet-popup-content {
+        margin: 13px;
+        touch-action: pan-y;
+    }
+    /* Style untuk control layer */
+    
+    .leaflet-control-layers {
+        border-radius: 4px;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+    }
+    
+    .leaflet-control-layers-toggle {
+        background-size: 20px 20px;
+    }
+    
+    .map-type-control {
+        background-color: #fff;
+        border-radius: 4px;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+        padding: 8px 10px;
+        margin-bottom: 10px;
+    }
+    
+    .map-type-control .btn {
+        margin-right: 5px;
+        padding: 4px 8px;
+        font-size: 12px;
+    }
     /* Footer Styling */
     
     footer {
@@ -125,13 +281,6 @@
         /* Memberi jarak antar kolom */
     }
     /* Maps Spot*/
-    
-    #map {
-        height: 800px;
-        /* Ditingkatkan dari 600px menjadi 800px */
-        width: 100%;
-        border: none !important;
-    }
     
     .leaflet-container {
         border: none !important;
