@@ -1,6 +1,7 @@
 @extends('user.layouts.app')
 
 @section('content')
+@include('user.layouts.navbar')
 <div class="container">
     <!-- Hero Section -->
     <div class="row align-items-center min-vh-100">
@@ -18,4 +19,5 @@
         </div>
     </div>
 </div>
+@include('user.layouts.footer')
 @endsection
