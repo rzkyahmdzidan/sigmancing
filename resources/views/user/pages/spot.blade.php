@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
 @extends('user.layouts.app')
 
 <head>
@@ -12,16 +10,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-
-    </script>
     <style>
-        #map {
-            height: 600px;
-            width: 100%;
-            border: none !important;
-        }
 
         /* Styling untuk kontrol routing */
         .leaflet-routing-container {
@@ -38,11 +31,6 @@
             max-height: none !important;
         }
 
-        .leaflet-routing-geocoder input {
-            width: 100%;
-            padding: 5px;
-        }
-
         .route-info-container {
             background-color: white;
             padding: 10px;
@@ -57,51 +45,16 @@
             margin-top: 10px;
         }
 
-        .leaflet-container {
-            border: none !important;
-            box-shadow: none !important;
-        }
-
-        .popup-content h5 {
-            color: #333;
-            margin-bottom: 8px;
-        }
-
-        .popup-content p {
-            margin-bottom: 5px;
-            font-size: 14px;
-        }
-
-        .popup-content img {
-            max-width: 100%;
-            border-radius: 4px;
-            margin: 8px 0;
-        }
-
         /* CSS untuk carousel swipe */
         .carousel-container {
             position: relative;
             overflow: hidden;
             touch-action: pan-y;
             user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
             margin: 10px 0;
         }
 
-        .carousel-slides {
-            display: flex;
-            transition: transform 0.3s ease;
-            width: 100%;
-        }
-
-        .carousel-slide {
-            min-width: 100%;
-            flex: 0 0 auto;
-        }
-
-        .carousel-indicators {
+        .carousel-dots {
             text-align: center;
             margin-top: 8px;
         }
@@ -116,28 +69,11 @@
             transition: background-color 0.3s;
         }
 
-        /* Memperbaiki masalah scrolling pada leaflet popup */
-        .leaflet-popup-content {
-            margin: 13px;
-            touch-action: pan-y;
-        }
-
-        /* Style untuk control layer */
-        .leaflet-control-layers {
-            border-radius: 4px;
-            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
-        }
-
-        .leaflet-control-layers-toggle {
-            background-size: 20px 20px;
-        }
-
         .map-type-control {
             background-color: #fff;
             border-radius: 4px;
-            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
-            padding: 8px 10px;
-            margin-bottom: 10px;
+            padding: 6px 8px;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
         }
 
         .map-type-control .btn {
@@ -145,19 +81,66 @@
             padding: 4px 8px;
             font-size: 12px;
         }
+
+        .info-footer {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .info-section {
+            text-align: center;
+            flex: 1;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .info-icon {
+            margin-right: 10px;
+            color: #0d6efd;
+        }
+
+        .tips-section {
+            display: flex;
+            margin-top: 10px;
+            justify-content: space-between;
+        }
+
+        .tip-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            flex: 1;
+        }
+
+        .tip-icon {
+            font-size: 24px;
+            margin-right: 10px;
+            color: #0d6efd;
+        }
     </style>
 </head>
 
 <body>
     <!-- Include Navbar -->
     @include('user.layouts.navbar')
-    <div class="container mt-4">
-        <h2 class="text-center mb-3">Peta Spot Memancing</h2>
-        <p class="text-center mb-4">Berikut adalah informasi lokasi spot memancing terbaik di sekitar Anda.</p>
 
-        <div class="card shadow-sm mb-4" style="border: none; box-shadow: none;">
-            <div class="card-body" style="border: none; padding: 0;">
-                <div class="d-flex justify-content-between align-items-center mb-3">
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row justify-content-center my-4">
+            <div class="col-md-11">
+                <!-- Header -->
+                <div class="text-center mb-3" data-aos="fade-down">
+                    <h2 class="fw-bold">Peta Spot Memancing</h2>
+                    <p class="text-muted">Berikut adalah informasi lokasi spot memancing terbaik di sekitar Anda.</p>
+                </div>
+
+                <!-- Location Button Row -->
+                <div class="d-flex justify-content-between align-items-center mb-3" data-aos="fade-up">
                     <button class="btn btn-primary" id="getLocationBtn">
                         <i class="bi bi-geo-alt"></i> Ambil Lokasi Saya
                     </button>
@@ -167,19 +150,90 @@
                         <button class="btn btn-sm btn-outline-secondary" id="satelliteMapBtn">Satelit</button>
                     </div>
                 </div>
-                <div id="map" style="border: none;"></div>
+
+                <!-- Map Section -->
+                <div class="mb-4" data-aos="zoom-in">
+                    <div id="map"></div>
+                </div>
+
+                <!-- Info Footer -->
+                <div class="info-footer" data-aos="fade-up">
+                    <div class="info-section">
+                        <div class="info-icon">
+                            <i class="bi bi-water fs-4"></i>
+                        </div>
+                        <div class="text-start">
+                            <div class="text-muted small">Jumlah Spot</div>
+                            <div class="fw-bold">{{ count($spots) }} Spot</div>
+                        </div>
+                    </div>
+                    <div class="info-section">
+                        <div class="info-icon">
+                            <i class="bi bi-geo-alt fs-4"></i>
+                        </div>
+                        <div class="text-start">
+                            <div class="text-muted small">Area Cakupan</div>
+                            <div class="fw-bold">Sekitar Anda</div>
+                        </div>
+                    </div>
+                    <div class="info-section">
+                        <div class="info-icon">
+                            <i class="bi bi-info-circle fs-4"></i>
+                        </div>
+                        <div class="text-start">
+                            <div class="text-muted small">Informasi Spot</div>
+                            <div class="fw-bold">Lengkap & Akurat</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tips Section -->
+                <div class="mt-4" data-aos="fade-up">
+                    <h5 class="fw-bold text-primary mb-3">
+                        <i class="bi bi-lightbulb-fill"></i> Tips Mencari Spot Memancing
+                    </h5>
+                    <div class="tips-section">
+                        <div class="tip-item">
+                            <div class="tip-icon">
+                                <i class="bi bi-geo-alt-fill"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold">Gunakan Fitur Lokasi</div>
+                                <p class="small text-muted">Aktifkan lokasi Anda untuk mendapatkan rekomendasi spot
+                                    memancing terdekat.</p>
+                            </div>
+                        </div>
+                        <div class="tip-item">
+                            <div class="tip-icon">
+                                <i class="bi bi-signpost-split-fill"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold">Dapatkan Rute</div>
+                                <p class="small text-muted">Klik pada spot untuk mendapatkan petunjuk arah menuju
+                                    lokasi.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    @include('user.layouts.footer')
 
+    @include('user.layouts.footer')
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="{{ asset('js/spot.js') }}"></script>
+    <!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+
         // Initialize map
         var map;
         var userMarker; // Variabel untuk menyimpan marker lokasi pengguna
@@ -278,93 +332,125 @@
         }
 
         // Modifikasi fungsi createPopupContent untuk menambahkan tombol rute
+        // Modifikasi fungsi createPopupContent untuk tampilan yang lebih menarik
         function createPopupContent(spot, includeDistance = false) {
-            let content = '<div class="popup-content" style="min-width: 250px;">' +
-                '<h5 style="font-size: 16px; font-weight: 600; color: #0d6efd; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px;">' +
+            let content = '<div class="popup-content" style="min-width: 260px;">' +
+                '<h5 style="font-size: 17px; font-weight: 700; color: #0d6efd; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 8px;">' +
                 spot.name + '</h5>';
 
             // Informasi lokasi dengan ikon
-            content += '<div style="margin-bottom: 6px;"><i class="bi bi-geo-alt" style="color: #666; width: 20px;"></i> ' +
-                '<span style="color: #444;">' + spot.location + '</span></div>';
+            content += '<div style="margin-bottom: 8px; display: flex;">' +
+                '<i class="bi bi-geo-alt-fill" style="color: #dc3545; min-width: 24px; font-size: 16px;"></i> ' +
+                '<span style="color: #333; font-size: 14px;">' + spot.location + '</span></div>';
 
             // Informasi jenis ikan dengan ikon
-            content += '<div style="margin-bottom: 6px;"><i class="bi bi-water" style="color: #666; width: 20px;"></i> ' +
-                '<span style="color: #444;">' + spot.fish + '</span></div>';
+            content += '<div style="margin-bottom: 8px; display: flex;">' +
+                '<i class="bi bi-water" style="color: #0d6efd; min-width: 24px; font-size: 16px;"></i> ' +
+                '<span style="color: #333; font-size: 14px;">' + spot.fish + '</span></div>';
 
-            // Tambahkan tombol untuk mendapatkan rute
-            content += '<div style="margin: 10px 0;">' +
-                '<button onclick="showRouteTo({lat: ' + spot.lat + ', lng: ' + spot.lng + ', name: \'' + spot.name +
-                '\', location: \'' + spot.location + '\'})" ' +
-                'class="btn btn-primary btn-sm" style="width: 100%;">' +
-                '<i class="bi bi-signpost"></i> Dapatkan Rute</button></div>';
-
-            // Informasi cocok untuk siapa (bagian ini dan seterusnya tidak diubah)
+            // Informasi cocok untuk siapa
             if (spot.suitable) {
-                content += '<div style="margin-bottom: 8px;"><span style="color: #444;">Cocok Untuk ' + spot.suitable +
-                    '</span></div>';
+                content += '<div style="margin-bottom: 8px; display: flex;">' +
+                    '<i class="bi bi-people-fill" style="color: #198754; min-width: 24px; font-size: 16px;"></i> ' +
+                    '<span style="color: #333; font-size: 14px;">Cocok Untuk ' + spot.suitable + '</span></div>';
             } else {
-                content += '<div style="margin-bottom: 8px;"><span style="color: #444;">Spot Memancing Umum</span></div>';
+                content += '<div style="margin-bottom: 8px; display: flex;">' +
+                    '<i class="bi bi-people-fill" style="color: #198754; min-width: 24px; font-size: 16px;"></i> ' +
+                    '<span style="color: #333; font-size: 14px;">Spot Memancing Umum</span></div>';
             }
 
-            // Buat simple carousel
+            // Tambahkan tombol untuk mendapatkan rute dengan styling lebih menarik
+            content += '<div style="margin: 15px 0;">' +
+                '<button onclick="showRouteTo({lat: ' + spot.lat + ', lng: ' + spot.lng + ', name: \'' + spot.name +
+                '\', location: \'' + spot.location + '\'})" ' +
+                'class="btn btn-primary w-100 rounded-pill shadow-sm" style="font-weight: 600; padding: 8px 15px;">' +
+                '<i class="bi bi-signpost-2-fill me-2"></i> Dapatkan Rute</button></div>';
+
+            // Tambahkan deskripsi jika ada
+            if (spot.description) {
+                content +=
+                    '<div style="margin: 12px 0; padding: 10px; background-color: #f8f9fa; border-radius: 8px; border-left: 3px solid #0d6efd;">' +
+                    '<span style="color: #495057; font-size: 13px;">' + spot.description + '</span></div>';
+            }
+
+            // Buat carousel gambar yang lebih menarik
             if (spot.images && Array.isArray(spot.images) && spot.images.length > 0) {
-                // Buat container sederhana
-                content += '<div class="simple-carousel" style="margin: 10px 0;">';
+                // Buat container dengan style yang lebih baik
+                content +=
+                    '<div class="simple-carousel" style="margin: 12px 0; border-radius: 10px; overflow: hidden; box-shadow: 0 3px 10px rgba(0,0,0,0.1);">';
 
                 // Tampilkan gambar pertama saja (yang aktif)
                 content += `<img src="${spot.images[0]}" class="carousel-image active" data-index="0"
-                           style="width: 100%; height: 150px; object-fit: cover; border-radius: 4px;">`;
+                   style="width: 100%; height: 160px; object-fit: cover;">`;
 
-                // Tambahkan navigasi dots
+                // Tambahkan navigasi dots yang lebih menarik
                 if (spot.images.length > 1) {
-                    content += '<div class="carousel-dots" style="text-align: center; margin-top: 5px;">';
+                    content +=
+                        '<div class="carousel-dots" style="text-align: center; margin: 8px 0; position: relative; bottom: 5px;">';
                     for (let i = 0; i < spot.images.length; i++) {
-                        content += `<span class="carousel-dot" data-index="${i}"
-                                  style="display: inline-block; width: 8px; height: 8px; border-radius: 50%;
-                                  background-color: ${i === 0 ? '#0d6efd' : '#ccc'}; margin: 0 3px;"></span>`;
+                        content +=
+                            `<span class="carousel-dot" data-index="${i}"
+                          style="display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+                          background-color: ${i === 0 ? '#0d6efd' : '#dee2e6'}; margin: 0 3px; transition: all 0.3s ease;"></span>`;
                     }
                     content += '</div>';
 
-                    // Tambahkan indikator jumlah gambar
-                    content += `<div class="carousel-indicator" style="text-align: center; font-size: 12px; color: #666; margin: 5px 0;">
-                             </div>`;
-
                     // Tambahkan data gambar untuk script (tersembunyi)
                     content += `<div class="carousel-data" style="display:none;"
-                               data-images='${JSON.stringify(spot.images)}' data-total="${spot.images.length}"></div>`;
+                       data-images='${JSON.stringify(spot.images)}' data-total="${spot.images.length}"></div>`;
                 }
 
                 content += '</div>';
             } else if (spot.image) {
-                // Fallback untuk single image
-                content += '<img src="' + spot.image + '" class="img-fluid rounded my-2" alt="' + spot.name +
-                    '" style="max-height: 150px; width: 100%; object-fit: cover;">';
+                // Fallback untuk single image dengan styling yang lebih baik
+                content += '<img src="' + spot.image + '" class="img-fluid rounded my-2 shadow-sm" alt="' + spot.name +
+                    '" style="max-height: 160px; width: 100%; object-fit: cover;">';
             }
 
-            // Bagian rekomendasi
-            content += '<div style="background-color: #f8f9fa; border-radius: 4px; padding: 8px; margin-top: 10px;">';
+            // Bagian rekomendasi dengan styling yang lebih menarik
+            content += '<div style="background-color: #f8f9fa; border-radius: 8px; padding: 12px; margin-top: 15px;">';
+
+            // Judul bagian rekomendasi
+            content +=
+                '<div style="margin-bottom: 10px; font-weight: 600; color: #0d6efd; font-size: 14px; border-bottom: 1px solid #e9ecef; padding-bottom: 5px;">' +
+                '<i class="bi bi-info-circle-fill me-1"></i> Rekomendasi Memancing</div>';
 
             // Rekomendasi umpan
-            content += '<div style="margin-bottom: 5px;"><strong style="font-size: 13px;">Rekomendasi Umpan:</strong>' +
-                '<div style="font-size: 13px; color: #444;">' + (spot.bait || "Tidak ada rekomendasi") + '</div></div>';
+            content += '<div style="margin-bottom: 8px; display: flex;">' +
+                '<i class="bi bi-egg-fill" style="color: #fd7e14; min-width: 24px; font-size: 16px;"></i> ' +
+                '<div style="display: flex; flex-direction: column;">' +
+                '<span style="font-size: 13px; color: #6c757d;">Rekomendasi Umpan:</span>' +
+                '<span style="font-size: 14px; color: #212529; font-weight: 500;">' + (spot.bait ||
+                    "Tidak ada rekomendasi") + '</span>' +
+                '</div></div>';
 
             // Rekomendasi cuaca
-            content += '<div style="margin-bottom: 5px;"><strong style="font-size: 13px;">Rekomendasi Cuaca:</strong>' +
-                '<div style="font-size: 13px; color: #444;">' + (spot.weather || "Tidak ada rekomendasi") + '</div></div>';
+            content += '<div style="margin-bottom: 5px; display: flex;">' +
+                '<i class="bi bi-cloud-sun-fill" style="color: #6610f2; min-width: 24px; font-size: 16px;"></i> ' +
+                '<div style="display: flex; flex-direction: column;">' +
+                '<span style="font-size: 13px; color: #6c757d;">Rekomendasi Cuaca:</span>' +
+                '<span style="font-size: 14px; color: #212529; font-weight: 500;">' + (spot.weather ||
+                    "Tidak ada rekomendasi") + '</span>' +
+                '</div></div>';
 
-            // Jarak dari lokasi pengguna
+            // Jarak dari lokasi pengguna dengan styling yang lebih menarik
             if (includeDistance && userLat !== null && userLng !== null) {
                 const distance = getDistance(userLat, userLng, spot.lat, spot.lng);
                 const distanceText = formatDistance(distance);
-                content += '<div style="margin-top: 8px; border-top: 1px solid #ddd; padding-top: 8px;">' +
-                    '<strong style="font-size: 13px;">Jarak dari lokasi Anda:</strong>' +
-                    '<div style="font-size: 14px; color: #0d6efd; font-weight: 600;">' + distanceText + '</div></div>';
+                content += '<div style="margin-top: 12px; border-top: 1px solid #e9ecef; padding-top: 12px;">' +
+                    '<div style="display: flex; align-items: center;">' +
+                    '<i class="bi bi-pin-map-fill me-2" style="color: #6c757d; font-size: 16px;"></i>' +
+                    '<span style="font-size: 13px; color: #495057;">Jarak dari lokasi Anda:</span>' +
+                    '</div>' +
+                    '<div style="font-size: 18px; color: #0d6efd; font-weight: 700; margin-top: 5px; text-align: center;">' +
+                    distanceText + '</div></div>';
             }
 
             content += '</div></div>';
             return content;
         }
 
+        // Fungsi untuk menampilkan rute ke spot memancing
         // Fungsi untuk menampilkan rute ke spot memancing
         function showRouteTo(spot) {
             // Pastikan lokasi pengguna tersedia
@@ -382,13 +468,14 @@
             routingControl = L.Routing.control({
                 waypoints: [
                     L.latLng(userLat, userLng),
-                    L.latLng(spot.lat, spot.lng) // Ganti destLat, destLng dengan spot.lat dan spot.lng
+                    L.latLng(spot.lat, spot.lng)
                 ],
                 routeWhileDragging: true,
                 lineOptions: {
                     styles: [{
-                        color: 'blue',
-                        weight: 4
+                        color: '#0d6efd',
+                        weight: 5,
+                        opacity: 0.7
                     }]
                 },
                 createMarker: function() {
@@ -415,21 +502,41 @@
                 // Format jarak
                 var distanceString = (summary.totalDistance / 1000).toFixed(1) + ' km';
 
-                // Update informasi rute
+                // Update informasi rute dengan desain yang lebih menarik
                 var routeInfoHtml = `
-        <div class="route-info-container">
-            <h5>${spot.name}</h5>
-            <p>Jarak: ${distanceString}, Waktu: ${timeString}</p>
-            <p>Tempat memancing di sekitar ${spot.location}</p>
-            <p>Kondisi: Baik</p>
-            <div class="route-action-buttons">
-                <button class="btn btn-primary btn-sm" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${spot.lat},${spot.lng}', '_blank')">Dapatkan Arah</button>
-                <button class="btn btn-danger btn-sm" onclick="clearRoute()">Batal Rute</button>
+        <div class="route-info-container p-3 bg-white rounded shadow-sm">
+            <div class="d-flex align-items-center mb-2">
+                <i class="bi bi-water text-primary me-2 fs-4"></i>
+                <h5 class="mb-0 fw-bold">${spot.name}</h5>
+            </div>
+            <div class="route-details bg-light p-2 rounded-3 my-2">
+                <div class="d-flex justify-content-between">
+                    <div class="text-center px-2">
+                        <i class="bi bi-rulers text-secondary"></i>
+                        <div class="fs-5 fw-bold text-primary">${distanceString}</div>
+                        <small class="text-muted">Jarak</small>
+                    </div>
+                    <div class="border-start"></div>
+                    <div class="text-center px-2">
+                        <i class="bi bi-stopwatch text-secondary"></i>
+                        <div class="fs-5 fw-bold text-primary">${timeString}</div>
+                        <small class="text-muted">Waktu</small>
+                    </div>
+                </div>
+            </div>
+            <p class="small text-muted mb-2">Lokasi: ${spot.location}</p>
+            <div class="d-flex gap-2">
+                <button class="btn btn-primary rounded-pill w-100" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${spot.lat},${spot.lng}', '_blank')">
+                    <i class="bi bi-google me-1"></i> Google Maps
+                </button>
+                <button class="btn btn-outline-danger rounded-pill" onclick="clearRoute()">
+                    <i class="bi bi-x-lg"></i>
+                </button>
             </div>
         </div>
         `;
 
-                // Tambahkan ke dalam container routing
+                // Tambahkan ke dalam container routing dengan delay
                 setTimeout(function() {
                     document.querySelector('.leaflet-routing-container').insertAdjacentHTML('beforeend',
                         routeInfoHtml);
@@ -548,6 +655,8 @@
                     // Event listener untuk popup
                     marker.on('popupopen', function() {
                         setTimeout(function() {
+                            setupCarousel();
+
                             const routeBtn = document.querySelector('.leaflet-popup-content button');
                             if (routeBtn) {
                                 routeBtn.addEventListener('click', function() {
@@ -775,7 +884,36 @@
             if (nearestSpot && nearestMarkerIndex >= 0) {
                 // Buka popup marker terdekat
                 spotMarkers[nearestMarkerIndex].openPopup();
+
+                // Menampilkan notifikasi spot terdekat
+                const distanceText = formatDistance(nearestDistance);
+                showNotification('success', `Spot terdekat ditemukan! Jarak: ${distanceText}`);
             }
+        }
+
+        // Fungsi untuk menampilkan notifikasi
+        function showNotification(type, message) {
+            // Buat elemen notifikasi
+            const notification = document.createElement('div');
+            notification.className = 'notification ' + type;
+            notification.innerHTML = `
+                <div class="alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show shadow-sm" role="alert"
+                     style="position: fixed; top: 20px; right: 20px; z-index: 9999; min-width: 300px; border-radius: 10px;">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-${type === 'success' ? 'check-circle' : 'exclamation-circle'}-fill me-2 fs-4"></i>
+                        <div>${message}</div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `;
+
+            // Tambahkan ke body
+            document.body.appendChild(notification);
+
+            // Hapus setelah 5 detik
+            setTimeout(() => {
+                notification.remove();
+            }, 5000);
         }
     </script>
 </body>

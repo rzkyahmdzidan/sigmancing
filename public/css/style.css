@@ -1,614 +1,811 @@
-    /* Hero Section Fullscreen */
-    
+/* Hero Section Fullscreen */
+
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+    /* Jarak antar elemen */
+    height: 100vh;
+    /* Tinggi penuh layar */
+    padding: 0 50px;
+    /* Padding kiri dan kanan */
+    box-sizing: border-box;
+    /* Pastikan padding dihitung dalam ukuran elemen */
+    margin-top: 0;
+    /* Hilangkan margin atas */
+}
+
+.hero .hero-text {
+    max-width: 50%;
+    /* Teks memiliki lebar maksimum 50% */
+    text-align: left;
+}
+
+.hero img {
+    max-width: 40%;
+    /* Ukuran logo maksimum 40% dari container */
+    height: auto;
+    /* Menjaga proporsi */
+    transition: all 0.3s ease-in-out;
+    /* Animasi halus */
+    border-radius: 8px;
+    /* Sudut melengkung */
+}
+
+.hero h1 {
+    font-size: 3rem;
+    /* Ukuran font besar */
+    font-weight: bold;
+    color: #09060c;
+    /* Sesuai tema warna */
+}
+
+.hero p {
+    font-size: 1.2rem;
+    margin-top: 20px;
+    line-height: 1.6;
+    color: #555;
+}
+
+.hero .btn {
+    margin-top: 30px;
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    border-radius: 25px;
+    background-color: #ff6b6b;
+    color: white;
+    text-decoration: none;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.hero .btn:hover {
+    background-color: #ff3b3b;
+}
+
+.hero-section {
+    background-color: #ffffff;
+    padding: 2rem 0;
+    margin-bottom: 30px;
+}
+
+.hero-title {
+    font-weight: 700;
+    font-size: 2.2rem;
+    color: #212529;
+    margin-bottom: 0.5rem;
+}
+
+.hero-subtitle {
+    font-size: 1.1rem;
+    color: #495057;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.fishing-icon {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: #0d6efd;
+}
+
+
+/* Custom CSS untuk spot.blade.php */
+
+#map {
+    height: 600px;
+    width: 100%;
+    border: none !important;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Styling untuk kontrol routing */
+
+.leaflet-routing-container {
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+    max-width: 350px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.leaflet-routing-alt {
+    max-height: none !important;
+}
+
+.leaflet-routing-geocoder input {
+    width: 100%;
+    padding: 5px;
+}
+
+.route-info-container {
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+}
+
+.route-action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.leaflet-container {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.popup-content h5 {
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.popup-content p {
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.popup-content img {
+    max-width: 100%;
+    border-radius: 4px;
+    margin: 8px 0;
+}
+
+
+/* CSS untuk carousel swipe */
+
+.carousel-container {
+    position: relative;
+    overflow: hidden;
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    margin: 10px 0;
+}
+
+.carousel-slides {
+    display: flex;
+    transition: transform 0.3s ease;
+    width: 100%;
+}
+
+.carousel-slide {
+    min-width: 100%;
+    flex: 0 0 auto;
+}
+
+.carousel-indicators {
+    text-align: center;
+    margin-top: 8px;
+}
+
+.carousel-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin: 0 3px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+
+/* Memperbaiki masalah scrolling pada leaflet popup */
+
+.leaflet-popup-content {
+    margin: 13px;
+    touch-action: pan-y;
+}
+
+
+/* Style untuk control layer */
+
+.leaflet-control-layers {
+    border-radius: 4px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+}
+
+.leaflet-control-layers-toggle {
+    background-size: 20px 20px;
+}
+
+.map-type-control {
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+    padding: 8px 10px;
+    margin-bottom: 10px;
+}
+
+.map-type-control .btn {
+    margin-right: 5px;
+    padding: 4px 8px;
+    font-size: 12px;
+}
+
+
+/* Styling untuk tombol lokasi */
+
+#getLocationBtn {
+    padding: 8px 16px;
+    transition: all 0.3s ease;
+}
+
+#getLocationBtn:hover {
+    box-shadow: 0 4px 8px rgba(13, 110, 253, 0.3);
+    transform: translateY(-2px);
+}
+
+
+/* Styling untuk card tips */
+
+.card {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.card-title {
+    font-size: 1.1rem;
+}
+
+
+/*toko blade  */
+
+#map {
+    height: 800px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.leaflet-routing-container {
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+    max-width: 350px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.leaflet-routing-alt {
+    max-height: none !important;
+}
+
+.leaflet-routing-geocoder input {
+    width: 100%;
+    padding: 5px;
+}
+
+.route-info-container {
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+}
+
+.route-action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.leaflet-container {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.popup-content h5 {
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.popup-content p {
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.popup-content img {
+    max-width: 100%;
+    border-radius: 4px;
+    margin: 8px 0;
+}
+
+
+/* CSS untuk carousel swipe */
+
+.carousel-container {
+    position: relative;
+    overflow: hidden;
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    margin: 10px 0;
+}
+
+.carousel-slides {
+    display: flex;
+    transition: transform 0.3s ease;
+    width: 100%;
+}
+
+.carousel-slide {
+    min-width: 100%;
+    flex: 0 0 auto;
+}
+
+.carousel-indicators {
+    text-align: center;
+    margin-top: 8px;
+}
+
+.carousel-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin: 0 3px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+
+/* Memperbaiki masalah scrolling pada leaflet popup */
+
+.leaflet-popup-content {
+    margin: 13px;
+    touch-action: pan-y;
+}
+
+
+/* Style untuk control layer */
+
+.leaflet-control-layers {
+    border-radius: 4px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+}
+
+.leaflet-control-layers-toggle {
+    background-size: 20px 20px;
+}
+
+.map-type-control {
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+    padding: 8px 10px;
+    margin-bottom: 10px;
+}
+
+.map-type-control .btn {
+    margin-right: 5px;
+    padding: 4px 8px;
+    font-size: 12px;
+}
+
+
+/* Footer Styling */
+
+footer {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    background-color: #09060c;
+    color: white;
+    padding: 40px 0;
+    /* Tambahkan padding lebih besar */
+    text-align: center;
+}
+
+footer h6 {
+    font-size: 1rem;
+    margin-bottom: 20px;
+    /* Jarak antara heading dan konten */
+}
+
+footer .small {
+    font-size: 0.85rem;
+}
+
+footer ul {
+    padding: 0;
+    list-style: none;
+}
+
+footer ul li {
+    margin-bottom: 10px;
+    /* Jarak antar list item */
+}
+
+footer a {
+    color: white;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+footer .container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    /* Agar tetap responsif */
+    gap: 20px;
+    /* Jarak antar kolom */
+}
+
+footer .row>div {
+    flex: 1;
+    /* Kolom memiliki lebar yang sama */
+    margin: 10px;
+    /* Tambahkan jarak antar kolom */
+}
+
+footer .row.text-center.text-md-start {
+    justify-content: space-around;
+    /* Memberi jarak antar kolom */
+}
+
+
+/* Maps Spot*/
+
+.leaflet-container {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.popup-content h5 {
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.popup-content p {
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.popup-content img {
+    max-width: 100%;
+    border-radius: 4px;
+    margin: 8px 0;
+}
+
+
+/* CSS untuk carousel swipe */
+
+.carousel-container {
+    position: relative;
+    overflow: hidden;
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    margin: 10px 0;
+}
+
+.carousel-slides {
+    display: flex;
+    transition: transform 0.3s ease;
+    width: 100%;
+}
+
+.carousel-slide {
+    min-width: 100%;
+    flex: 0 0 auto;
+}
+
+.carousel-indicators {
+    text-align: center;
+    margin-top: 8px;
+}
+
+.carousel-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin: 0 3px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+
+/* Memperbaiki masalah scrolling pada leaflet popup */
+
+.leaflet-popup-content {
+    margin: 13px;
+    touch-action: pan-y;
+}
+
+
+/* Style untuk control layer */
+
+.leaflet-control-layers {
+    border-radius: 4px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+}
+
+.leaflet-control-layers-toggle {
+    background-size: 20px 20px;
+}
+
+.map-type-control {
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+    padding: 8px 10px;
+    margin-bottom: 10px;
+}
+
+.map-type-control .btn {
+    margin-right: 5px;
+    padding: 4px 8px;
+    font-size: 12px;
+}
+
+.map-text {
+    margin-top: 20px;
+    text-align: center;
+    color: #555;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.map-text h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #09060c;
+    margin-bottom: 10px;
+}
+
+.map-text p {
+    font-size: 1rem;
+    margin-top: 10px;
+    color: #555;
+    line-height: 1.6;
+}
+
+.btn-my-location {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease-in-out;
+}
+
+.btn-my-location:hover {
+    background-color: #0056b3;
+}
+
+
+/* CSS untuk carousel swipe */
+
+.carousel-container {
+    position: relative;
+    overflow: hidden;
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    margin: 10px 0;
+}
+
+.carousel-slides {
+    display: flex;
+    transition: transform 0.3s ease;
+    width: 100%;
+}
+
+.carousel-slide {
+    min-width: 100%;
+    flex: 0 0 auto;
+}
+
+.carousel-indicators {
+    text-align: center;
+    margin-top: 8px;
+}
+
+.carousel-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin: 0 3px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+
+/* Memperbaiki masalah scrolling pada leaflet popup */
+
+.leaflet-popup-content {
+    margin: 13px;
+    touch-action: pan-y;
+}
+
+
+/* Layar Kecil (Tablet/HP) */
+
+.navbar {
+    padding: 10px 20px;
+    font-size: 1rem;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.navbar-nav .nav-item .nav-link {
+    margin-right: 15px;
+    color: #555;
+    transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-item .nav-link:hover {
+    color: #007bff;
+}
+
+.navbar-nav .nav-item .btn-link {
+    margin: 0;
+    padding: 0;
+    color: #555;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-item .btn-link:hover {
+    color: #007bff;
+    text-decoration: underline;
+}
+
+.navbar-nav .nav-item span {
+    margin-right: 15px;
+    color: #333;
+    font-weight: 500;
+}
+
+.navbar-toggler {
+    border: none;
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23333' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(0, 0, 0, 0.5)' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+.collapse.show {
+    background: #fff;
+    padding: 10px 0;
+    border-radius: 5px;
+}
+
+.navbar-nav .dropdown-menu {
+    min-width: 200px;
+    /* Lebar dropdown */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Efek bayangan */
+    border-radius: 5px;
+    /* Sudut melengkung */
+}
+
+.navbar-nav .dropdown-item {
+    font-size: 0.9rem;
+    /* Ukuran teks dropdown */
+    padding: 10px 15px;
+    /* Padding item dropdown */
+    transition: background-color 0.3s ease-in-out;
+}
+
+.navbar-nav .dropdown-item:hover {
+    background-color: #f8f9fa;
+    /* Warna latar belakang saat hover */
+}
+
+@media (max-width: 768px) {
     .hero {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 20px;
-        /* Jarak antar elemen */
-        height: 100vh;
-        /* Tinggi penuh layar */
-        padding: 0 50px;
-        /* Padding kiri dan kanan */
-        box-sizing: border-box;
-        /* Pastikan padding dihitung dalam ukuran elemen */
-        margin-top: 0;
-        /* Hilangkan margin atas */
-    }
-    
-    .hero .hero-text {
-        max-width: 50%;
-        /* Teks memiliki lebar maksimum 50% */
-        text-align: left;
-    }
-    
-    .hero img {
-        max-width: 40%;
-        /* Ukuran logo maksimum 40% dari container */
+        flex-direction: column-reverse;
+        /* Logo otomatis di atas teks */
+        text-align: center;
+        /* Pusatkan teks dan logo */
         height: auto;
-        /* Menjaga proporsi */
-        transition: all 0.3s ease-in-out;
-        /* Animasi halus */
-        border-radius: 8px;
-        /* Sudut melengkung */
+        /* Tinggi otomatis */
+        padding: 20px;
+        /* Padding lebih kecil */
     }
-    
-    .hero h1 {
-        font-size: 3rem;
-        /* Ukuran font besar */
-        font-weight: bold;
-        color: #09060c;
-        /* Sesuai tema warna */
-    }
-    
-    .hero p {
-        font-size: 1.2rem;
-        margin-top: 20px;
-        line-height: 1.6;
-        color: #555;
-    }
-    
-    .hero .btn {
-        margin-top: 30px;
-        padding: 10px 20px;
-        font-size: 1.1rem;
-        border-radius: 25px;
-        background-color: #FF6B6B;
-        color: white;
-        text-decoration: none;
-        transition: background-color 0.3s ease-in-out;
-    }
-    
-    .hero .btn:hover {
-        background-color: #FF3B3B;
-    }
-    
-    .hero-section {
-        background-color: #ffffff;
-        padding: 2rem 0;
-        margin-bottom: 30px;
-    }
-    
-    .hero-title {
-        font-weight: 700;
-        font-size: 2.2rem;
-        color: #212529;
-        margin-bottom: 0.5rem;
-    }
-    
-    .hero-subtitle {
-        font-size: 1.1rem;
-        color: #495057;
-        max-width: 700px;
-        margin: 0 auto;
-    }
-    
-    .fishing-icon {
-        font-size: 2.5rem;
-        margin-bottom: 10px;
-        color: #0d6efd;
-    }
-    /*toko blade  */
-    
-    #map {
-        height: 600px;
-        border-radius: 15px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px;
-    }
-    
-    .leaflet-routing-container {
-        background-color: white;
-        padding: 10px;
-        border-radius: 5px;
-        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
-        max-width: 350px;
-        max-height: 300px;
-        overflow-y: auto;
-    }
-    
-    .leaflet-routing-alt {
-        max-height: none !important;
-    }
-    
-    .leaflet-routing-geocoder input {
-        width: 100%;
-        padding: 5px;
-    }
-    
-    .route-info-container {
-        background-color: white;
-        padding: 10px;
-        border-radius: 5px;
-        margin-top: 10px;
-        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
-    }
-    
-    .route-action-buttons {
-        display: flex;
-        gap: 10px;
-        margin-top: 10px;
-    }
-    
-    .leaflet-container {
-        border: none !important;
-        box-shadow: none !important;
-    }
-    
-    .popup-content h5 {
-        color: #333;
-        margin-bottom: 8px;
-    }
-    
-    .popup-content p {
-        margin-bottom: 5px;
-        font-size: 14px;
-    }
-    
-    .popup-content img {
+    .hero .hero-text {
         max-width: 100%;
-        border-radius: 4px;
-        margin: 8px 0;
+        /* Teks penuh di layar kecil */
     }
-    /* CSS untuk carousel swipe */
-    
-    .carousel-container {
-        position: relative;
-        overflow: hidden;
-        touch-action: pan-y;
-        user-select: none;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        margin: 10px 0;
-    }
-    
-    .carousel-slides {
-        display: flex;
-        transition: transform 0.3s ease;
-        width: 100%;
-    }
-    
-    .carousel-slide {
-        min-width: 100%;
-        flex: 0 0 auto;
-    }
-    
-    .carousel-indicators {
-        text-align: center;
-        margin-top: 8px;
-    }
-    
-    .carousel-dot {
-        display: inline-block;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        margin: 0 3px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-    /* Memperbaiki masalah scrolling pada leaflet popup */
-    
-    .leaflet-popup-content {
-        margin: 13px;
-        touch-action: pan-y;
-    }
-    /* Style untuk control layer */
-    
-    .leaflet-control-layers {
-        border-radius: 4px;
-        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
-    }
-    
-    .leaflet-control-layers-toggle {
-        background-size: 20px 20px;
-    }
-    
-    .map-type-control {
-        background-color: #fff;
-        border-radius: 4px;
-        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
-        padding: 8px 10px;
-        margin-bottom: 10px;
-    }
-    
-    .map-type-control .btn {
-        margin-right: 5px;
-        padding: 4px 8px;
-        font-size: 12px;
-    }
-    /* Footer Styling */
-    
-    footer {
-        font-size: 0.9rem;
-        line-height: 1.5;
-        background-color: #09060c;
-        color: white;
-        padding: 40px 0;
-        /* Tambahkan padding lebih besar */
-        text-align: center;
-    }
-    
-    footer h6 {
-        font-size: 1rem;
+    .hero img {
+        max-width: 60%;
+        /* Perbesar logo di layar kecil */
         margin-bottom: 20px;
-        /* Jarak antara heading dan konten */
+        /* Jarak bawah logo */
     }
-    
-    footer .small {
-        font-size: 0.85rem;
-    }
-    
-    footer ul {
-        padding: 0;
-        list-style: none;
-    }
-    
-    footer ul li {
-        margin-bottom: 10px;
-        /* Jarak antar list item */
-    }
-    
-    footer a {
-        color: white;
-        text-decoration: none;
-    }
-    
-    footer a:hover {
-        text-decoration: underline;
-    }
-    
-    footer .container {
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        /* Agar tetap responsif */
-        gap: 20px;
-        /* Jarak antar kolom */
-    }
-    
-    footer .row>div {
-        flex: 1;
-        /* Kolom memiliki lebar yang sama */
-        margin: 10px;
-        /* Tambahkan jarak antar kolom */
-    }
-    
-    footer .row.text-center.text-md-start {
-        justify-content: space-around;
-        /* Memberi jarak antar kolom */
-    }
-    /* Maps Spot*/
-    
-    .leaflet-container {
-        border: none !important;
-        box-shadow: none !important;
-    }
-    
-    .popup-content h5 {
-        color: #333;
-        margin-bottom: 8px;
-    }
-    
-    .popup-content p {
-        margin-bottom: 5px;
-        font-size: 14px;
-    }
-    
-    .popup-content img {
-        max-width: 100%;
-        border-radius: 4px;
-        margin: 8px 0;
-    }
-    /* CSS untuk carousel swipe */
-    
-    .carousel-container {
-        position: relative;
-        overflow: hidden;
-        touch-action: pan-y;
-        user-select: none;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        margin: 10px 0;
-    }
-    
-    .carousel-slides {
-        display: flex;
-        transition: transform 0.3s ease;
-        width: 100%;
-    }
-    
-    .carousel-slide {
-        min-width: 100%;
-        flex: 0 0 auto;
-    }
-    
-    .carousel-indicators {
-        text-align: center;
-        margin-top: 8px;
-    }
-    
-    .carousel-dot {
-        display: inline-block;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        margin: 0 3px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-    /* Memperbaiki masalah scrolling pada leaflet popup */
-    
-    .leaflet-popup-content {
-        margin: 13px;
-        touch-action: pan-y;
-    }
-    /* Style untuk control layer */
-    
-    .leaflet-control-layers {
-        border-radius: 4px;
-        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
-    }
-    
-    .leaflet-control-layers-toggle {
-        background-size: 20px 20px;
-    }
-    
-    .map-type-control {
-        background-color: #fff;
-        border-radius: 4px;
-        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
-        padding: 8px 10px;
-        margin-bottom: 10px;
-    }
-    
-    .map-type-control .btn {
-        margin-right: 5px;
-        padding: 4px 8px;
-        font-size: 12px;
-    }
-    
-    .map-text {
-        margin-top: 20px;
-        text-align: center;
-        color: #555;
-        font-size: 1rem;
-        line-height: 1.6;
-    }
-    
-    .map-text h2 {
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: #09060c;
-        margin-bottom: 10px;
-    }
-    
-    .map-text p {
-        font-size: 1rem;
-        margin-top: 10px;
-        color: #555;
-        line-height: 1.6;
-    }
-    
-    .btn-my-location {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        z-index: 1000;
-        background-color: #007bff;
-        color: #fff;
-        padding: 10px 15px;
-        border-radius: 8px;
-        border: none;
-        cursor: pointer;
-        font-size: 0.9rem;
-        font-weight: bold;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        transition: background-color 0.3s ease-in-out;
-    }
-    
-    .btn-my-location:hover {
-        background-color: #0056b3;
-    }
-    /* CSS untuk carousel swipe */
-    
-    .carousel-container {
-        position: relative;
-        overflow: hidden;
-        touch-action: pan-y;
-        user-select: none;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        margin: 10px 0;
-    }
-    
-    .carousel-slides {
-        display: flex;
-        transition: transform 0.3s ease;
-        width: 100%;
-    }
-    
-    .carousel-slide {
-        min-width: 100%;
-        flex: 0 0 auto;
-    }
-    
-    .carousel-indicators {
-        text-align: center;
-        margin-top: 8px;
-    }
-    
-    .carousel-dot {
-        display: inline-block;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        margin: 0 3px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-    /* Memperbaiki masalah scrolling pada leaflet popup */
-    
-    .leaflet-popup-content {
-        margin: 13px;
-        touch-action: pan-y;
-    }
-    /* Layar Kecil (Tablet/HP) */
-    
-    .navbar {
-        padding: 10px 20px;
-        font-size: 1rem;
-    }
-    
-    .navbar-brand {
-        font-weight: bold;
-        font-size: 1.2rem;
-        color: #333;
-    }
-    
-    .navbar-nav .nav-item .nav-link {
-        margin-right: 15px;
-        color: #555;
-        transition: color 0.3s ease;
-    }
-    
-    .navbar-nav .nav-item .nav-link:hover {
-        color: #007bff;
-    }
-    
-    .navbar-nav .nav-item .btn-link {
-        margin: 0;
-        padding: 0;
-        color: #555;
-        text-decoration: none;
-        transition: color 0.3s ease;
-    }
-    
-    .navbar-nav .nav-item .btn-link:hover {
-        color: #007bff;
-        text-decoration: underline;
-    }
-    
+    .navbar-nav .nav-item .nav-link,
+    .navbar-nav .nav-item .btn-link,
     .navbar-nav .nav-item span {
-        margin-right: 15px;
-        color: #333;
-        font-weight: 500;
+        margin-right: 0;
+        margin-bottom: 10px;
     }
-    
-    .navbar-toggler {
-        border: none;
+    .navbar-brand {
+        font-size: 1.1rem;
     }
-    
-    .navbar-toggler-icon {
-        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23333' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(0, 0, 0, 0.5)' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+
+/* Layar Sangat Kecil (HP ≤576px) */
+
+@media (max-width: 576px) {
+    .hero img {
+        max-width: 80%;
+        /* Logo memenuhi sebagian besar lebar layar */
+        margin-bottom: 20px;
+        /* Jarak bawah logo */
     }
-    
-    .collapse.show {
-        background: #fff;
-        padding: 10px 0;
-        border-radius: 5px;
+    .hero h1 {
+        font-size: 2rem;
+        /* Ukuran teks lebih kecil */
     }
-    
-    .navbar-nav .dropdown-menu {
-        min-width: 200px;
-        /* Lebar dropdown */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        /* Efek bayangan */
-        border-radius: 5px;
-        /* Sudut melengkung */
+    .hero p {
+        font-size: 1rem;
+        /* Ukuran teks lebih kecil */
     }
-    
-    .navbar-nav .dropdown-item {
-        font-size: 0.9rem;
-        /* Ukuran teks dropdown */
-        padding: 10px 15px;
-        /* Padding item dropdown */
-        transition: background-color 0.3s ease-in-out;
+}
+
+@media (max-width: 768px) {
+    #map {
+        height: 500px;
+        /* Tinggi peta lebih kecil pada tablet */
     }
-    
-    .navbar-nav .dropdown-item:hover {
-        background-color: #f8f9fa;
-        /* Warna latar belakang saat hover */
+}
+
+
+/* Responsif untuk HP */
+
+@media (max-width: 576px) {
+    #map {
+        height: 400px;
+        /* Tinggi peta lebih kecil pada ponsel */
     }
-    
-    @media (max-width: 768px) {
-        .hero {
-            flex-direction: column-reverse;
-            /* Logo otomatis di atas teks */
-            text-align: center;
-            /* Pusatkan teks dan logo */
-            height: auto;
-            /* Tinggi otomatis */
-            padding: 20px;
-            /* Padding lebih kecil */
-        }
-        .hero .hero-text {
-            max-width: 100%;
-            /* Teks penuh di layar kecil */
-        }
-        .hero img {
-            max-width: 60%;
-            /* Perbesar logo di layar kecil */
-            margin-bottom: 20px;
-            /* Jarak bawah logo */
-        }
-        .navbar-nav .nav-item .nav-link,
-        .navbar-nav .nav-item .btn-link,
-        .navbar-nav .nav-item span {
-            margin-right: 0;
-            margin-bottom: 10px;
-        }
-        .navbar-brand {
-            font-size: 1.1rem;
-        }
+}
+
+
+/* Responsif untuk Footer */
+
+@media (max-width: 768px) {
+    footer .container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
     }
-    /* Layar Sangat Kecil (HP ≤576px) */
-    
-    @media (max-width: 576px) {
-        .hero img {
-            max-width: 80%;
-            /* Logo memenuhi sebagian besar lebar layar */
-            margin-bottom: 20px;
-            /* Jarak bawah logo */
-        }
-        .hero h1 {
-            font-size: 2rem;
-            /* Ukuran teks lebih kecil */
-        }
-        .hero p {
-            font-size: 1rem;
-            /* Ukuran teks lebih kecil */
-        }
+    footer .row>div {
+        margin-bottom: 20px;
+        /* Jarak antar kolom pada layar kecil */
     }
-    
-    @media (max-width: 768px) {
-        #map {
-            height: 500px;
-            /* Tinggi peta lebih kecil pada tablet */
-        }
-    }
-    /* Responsif untuk HP */
-    
-    @media (max-width: 576px) {
-        #map {
-            height: 400px;
-            /* Tinggi peta lebih kecil pada ponsel */
-        }
-    }
-    /* Responsif untuk Footer */
-    
-    @media (max-width: 768px) {
-        footer .container {
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-        footer .row>div {
-            margin-bottom: 20px;
-            /* Jarak antar kolom pada layar kecil */
-        }
-    }
+}
