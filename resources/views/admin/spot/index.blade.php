@@ -227,6 +227,7 @@
 @section('scripts')
     <script>
         // Edit Modal Handler
+        // Edit Modal Handler
         const editModal = document.getElementById('editSpotModal');
         if (editModal) {
             editModal.addEventListener('show.bs.modal', event => {
@@ -234,16 +235,81 @@
                 const spotData = JSON.parse(button.getAttribute('data-spot'));
 
                 const form = editModal.querySelector('form');
+
+                // Set basic form fields
                 form.querySelector('[name="nama_spot"]').value = spotData.nama_spot;
                 form.querySelector('[name="lokasi"]').value = spotData.lokasi;
                 form.querySelector('[name="latitude"]').value = spotData.latitude;
                 form.querySelector('[name="longitude"]').value = spotData.longitude;
                 form.querySelector('[name="deskripsi"]').value = spotData.deskripsi;
                 form.querySelector('[name="jenis_ikan"]').value = spotData.jenis_ikan;
-                form.querySelector('[name="rekomendasi_umpan"]').value = spotData.rekomendasi_umpan;
                 form.querySelector('[name="rekomendasi_cuaca"]').value = spotData.rekomendasi_cuaca;
                 form.querySelector('[name="status"]').value = spotData.status;
 
+                // Pastikan form menggunakan method POST dengan _method=PUT
+                form.method = "POST";
+
+                // Tambahkan atau perbarui field _method
+                let methodField = form.querySelector('input[name="_method"]');
+                if (!methodField) {
+                    methodField = document.createElement('input');
+                    methodField.type = 'hidden';
+                    methodField.name = '_method';
+                    form.appendChild(methodField);
+                }
+                methodField.value = 'PUT';
+
+                // Ambil gambar yang sudah ada
+                if (spotData.gambar) {
+                    try {
+                        let gambarArray = typeof spotData.gambar === 'string' ?
+                            JSON.parse(spotData.gambar) :
+                            spotData.gambar;
+
+                        displayExistingImages(gambarArray);
+
+                        // Update hidden input untuk existing_images
+                        document.getElementById('existing_images_input').value = JSON.stringify(gambarArray);
+                    } catch (e) {
+                        console.error("Error parsing images", e);
+                    }
+                }
+
+                // Load umpan data and prepare it
+                // Bersihkan container umpan terlebih dahulu
+                const umpanContainer = document.getElementById('edit-hidden-umpan-container');
+                umpanContainer.innerHTML = '';
+
+                // Ambil ID spot untuk fetch data rekomendasi umpan
+                const spotId = spotData.id;
+
+                // Fetch data umpan untuk spot ini dari endpoint edit
+                fetch(`/admin/spot/${spotId}/edit`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Menggunakan data umpans dari response
+                        if (data.umpans && data.umpans.length > 0) {
+                            // Update select dropdown value
+                            const selectElem = document.getElementById('edit_rekomendasi_umpan');
+                            if (selectElem) {
+                                selectElem.value = data.umpans[0].id;
+                            }
+
+                            // Create hidden inputs for each umpan
+                            data.umpans.forEach(umpan => {
+                                const hiddenInput = document.createElement('input');
+                                hiddenInput.type = 'hidden';
+                                hiddenInput.name = 'rekomendasi_umpan[]';
+                                hiddenInput.value = umpan.id;
+                                umpanContainer.appendChild(hiddenInput);
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error fetching umpan data:", error);
+                    });
+
+                // Set action URL
                 form.action = `/admin/spot/${spotData.id}`;
             });
         }
