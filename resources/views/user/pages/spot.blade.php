@@ -15,7 +15,6 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <style>
-
         /* Styling untuk kontrol routing */
         .leaflet-routing-container {
             background-color: white;
@@ -122,8 +121,30 @@
             margin-right: 10px;
             color: #0d6efd;
         }
+
+        /* CSS untuk legenda marker */
+        .legend {
+            background-color: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            max-width: 200px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
     </style>
-</head>
+</head> 
 
 <body>
     <!-- Include Navbar -->
@@ -300,10 +321,143 @@
             console.log({
                 id: {{ $spot->id }},
                 nama: "{{ $spot->nama_spot }}",
+                ikan: "{{ $spot->jenis_ikan }}",
                 umpan: "{{ $spot->rekomendasi_umpan }}",
                 cuaca: "{{ $spot->rekomendasi_cuaca }}"
             });
         @endforeach
+
+        // Fungsi untuk menentukan warna marker berdasarkan jenis ikan
+        function getMarkerColorByFish(fishType) {
+            // Konversi ke lowercase dan hapus spasi berlebih untuk konsistensi
+            const fish = fishType.toLowerCase().trim();
+
+            // Tentukan warna berdasarkan jenis ikan
+            if (fish.includes('kakap')) {
+                return 'red'; // Kakap - merah
+            } else if (fish.includes('kerapu')) {
+                return 'green'; // Kerapu - hijau
+            } else if (fish.includes('tenggiri')) {
+                return 'blue'; // Tenggiri - biru
+            } else if (fish.includes('bawal')) {
+                return 'orange'; // Bawal - oranye
+            } else if (fish.includes('gurame') || fish.includes('gurami')) {
+                return 'purple'; // Gurame - ungu
+            } else if (fish.includes('nila')) {
+                return 'darkgreen'; // Nila - hijau tua
+            } else if (fish.includes('mas')) {
+                return 'gold'; // Ikan mas - emas
+            } else if (fish.includes('lele')) {
+                return 'darkgrey'; // Lele - abu-abu tua
+            }
+
+            // Default jika tidak ada yang cocok
+            return 'blue';
+        }
+
+        // Fungsi untuk membuat custom icon marker
+        // Fungsi untuk membuat custom icon marker berbentuk pin
+        function createCustomMarker(fishType) {
+            const markerColor = getMarkerColorByFish(fishType);
+
+            // SVG untuk marker pin dengan warna yang dinamis
+            const svgTemplate = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 36" width="24" height="36">
+            <path fill="${markerColor}" stroke="#FFFFFF" stroke-width="1" d="M12 0C5.4 0 0 5.4 0 12c0 7.2 12 24 12 24s12-16.8 12-24c0-6.6-5.4-12-12-12z"/>
+            <circle fill="#FFFFFF" cx="12" cy="12" r="4"/>
+        </svg>
+    `;
+
+            // Encode SVG menjadi data URI
+            const svgBase64 = btoa(svgTemplate);
+            const dataUri = `data:image/svg+xml;base64,${svgBase64}`;
+
+            // Buat icon kustom
+            return L.icon({
+                iconUrl: dataUri,
+                iconSize: [24, 36],
+                iconAnchor: [12, 36],
+                popupAnchor: [0, -36]
+            });
+        }
+
+        // Tambahkan legenda untuk warna marker
+        // Tambahkan legenda untuk warna marker
+        function addMarkerLegend() {
+            const legendControl = L.control({
+                position: 'bottomright'
+            });
+
+            legendControl.onAdd = function() {
+                const div = L.DomUtil.create('div', 'info legend');
+                div.style.backgroundColor = 'white';
+                div.style.padding = '10px';
+                div.style.borderRadius = '5px';
+                div.style.boxShadow = '0 0 5px rgba(0,0,0,0.2)';
+                div.style.maxWidth = '180px';
+                div.style.fontSize = '12px';
+
+                const fishTypes = [{
+                        name: 'Kakap',
+                        color: 'red'
+                    },
+                    {
+                        name: 'Kerapu',
+                        color: 'green'
+                    },
+                    {
+                        name: 'Tenggiri',
+                        color: 'blue'
+                    },
+                    {
+                        name: 'Bawal',
+                        color: 'orange'
+                    },
+                    {
+                        name: 'Gurame',
+                        color: 'purple'
+                    },
+                    {
+                        name: 'Nila',
+                        color: 'darkgreen'
+                    },
+                    {
+                        name: 'Ikan Mas',
+                        color: 'gold'
+                    },
+                    {
+                        name: 'Lele',
+                        color: 'darkgrey'
+                    }
+                ];
+
+                div.innerHTML = '<h6 class="mb-2 fw-bold" style="font-size: 14px;">Potensi Ikan:</h6>';
+
+                fishTypes.forEach(fish => {
+                    // Buat pin SVG mini untuk legenda
+                    const svgTemplate = `
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 36" width="12" height="18">
+                    <path fill="${fish.color}" stroke="#FFFFFF" stroke-width="1" d="M12 0C5.4 0 0 5.4 0 12c0 7.2 12 24 12 24s12-16.8 12-24c0-6.6-5.4-12-12-12z"/>
+                    <circle fill="#FFFFFF" cx="12" cy="12" r="4"/>
+                </svg>
+            `;
+
+                    // Encode SVG menjadi data URI
+                    const svgBase64 = btoa(svgTemplate);
+                    const dataUri = `data:image/svg+xml;base64,${svgBase64}`;
+
+                    div.innerHTML +=
+                        `<div class="d-flex align-items-center mb-2">
+                    <img src="${dataUri}" style="width: 12px; height: 18px; margin-right: 8px;">
+                    <span>${fish.name}</span>
+                </div>`;
+                });
+
+                return div;
+            };
+
+            legendControl.addTo(map);
+        }
 
         // Fungsi untuk menghitung jarak antara dua titik koordinat (dalam meter)
         function getDistance(lat1, lon1, lat2, lon2) {
@@ -343,9 +497,10 @@
                 '<i class="bi bi-geo-alt-fill" style="color: #dc3545; min-width: 24px; font-size: 16px;"></i> ' +
                 '<span style="color: #333; font-size: 14px;">' + spot.location + '</span></div>';
 
-            // Informasi jenis ikan dengan ikon
+            // Informasi jenis ikan dengan ikon dan warna yang sesuai
+            const fishColor = getMarkerColorByFish(spot.fish);
             content += '<div style="margin-bottom: 8px; display: flex;">' +
-                '<i class="bi bi-water" style="color: #0d6efd; min-width: 24px; font-size: 16px;"></i> ' +
+                `<i class="bi bi-water" style="color: ${fishColor}; min-width: 24px; font-size: 16px;"></i> ` +
                 '<span style="color: #333; font-size: 14px;">' + spot.fish + '</span></div>';
 
             // Informasi cocok untuk siapa
@@ -544,7 +699,6 @@
             });
         }
 
-
         // Fungsi untuk menghapus rute
         function clearRoute() {
             if (routingControl) {
@@ -643,11 +797,14 @@
                     // Buat popup content tanpa jarak awalnya
                     var initialPopupContent = createPopupContent(spotData, false);
 
-                    var marker = L.marker([spotData.lat, spotData.lng])
-                        .bindPopup(initialPopupContent, {
-                            minWidth: 250,
-                            maxWidth: 300
-                        });
+                    // Gunakan custom marker berdasarkan jenis ikan
+                    var marker = L.marker([spotData.lat, spotData.lng], {
+                        icon: createCustomMarker(spotData
+                            .fish) // Gunakan custom marker dengan warna sesuai jenis ikan
+                    }).bindPopup(initialPopupContent, {
+                        minWidth: 250,
+                        maxWidth: 300
+                    });
 
                     marker.addTo(map);
                     spotMarkers.push(marker);
@@ -690,6 +847,9 @@
         @else
             console.log("Tidak ada data spot yang tersedia.");
         @endif
+
+        // Panggil fungsi untuk menambahkan legenda marker
+        addMarkerLegend();
 
         // Fungsi setup carousel - dalam scope global
         function setupCarousel() {

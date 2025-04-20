@@ -140,7 +140,7 @@
                                 @endif
                             @else
                                 <div class="spot-image-container">
-                                    <img src="{{ asset('images/default-toko.jpg') }}" alt="Default" class="spot-image">
+                                    <img src="{{ asset('images/toko/') }}" alt="Default" class="spot-image">
                                 </div>
                             @endif
                         </td>
