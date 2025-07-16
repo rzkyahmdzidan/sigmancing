@@ -1,13 +1,18 @@
 @extends('user.layouts.app')
 
+@section('styles')
+    <!-- AOS Animation CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+@endsection
+
 @section('content')
     @include('user.layouts.navbar')
 
     <!-- Hero Section -->
     <div class="hero-section position-relative overflow-hidden">
         <div class="container">
-            <div class="row align-items-center py-5">
-                <div class="col-lg-6" data-aos="fade-right">
+            <div class="row align-items-center py-5 flex-column-reverse flex-lg-row">
+                <div class="col-lg-6 col-12 mt-4 mt-lg-0" data-aos="fade-right">
                     <h1 class="display-4 fw-bold mb-4">Informasi Spot Memancing</h1>
                     <p class="lead text-muted mb-5">
                         Dapatkan Informasi Mengenai Spot Potensial Memancing di Pesisir dan Sekitar kota Lhokseumawe untuk
@@ -18,18 +23,13 @@
                         <i class="bi bi-geo-alt-fill me-2"></i>Dapatkan Spot
                     </a>
                 </div>
-                <div class="col-lg-6 text-center" data-aos="fade-left">
-                    <img src="{{ asset('images/logobesar.png') }}" alt="Fishing Icon" class="img-fluid">
+                <div class="col-lg-6 col-12 text-center mb-4 mb-lg-0" data-aos="fade-left">
+                    <img src="{{ asset('images/logobesar.png') }}" alt="Logo Memancing" class="img-fluid">
                 </div>
             </div>
         </div>
-        <div class="wave-bottom">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-                <path fill="#f8f9fa" fill-opacity="1"
-                    d="M0,128L48,144C96,160,192,192,288,197.3C384,203,480,181,576,160C672,139,768,117,864,128C960,139,1056,181,1152,186.7C1248,192,1344,160,1392,144L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z">
-                </path>
-            </svg>
-        </div>
+    </div>
+
     </div>
 
     <!-- Featured Spots Section -->
@@ -215,7 +215,7 @@
             <div class="row g-4">
                 <div class="col-md-4" data-aos="fade-up">
                     <div class="feature-card text-center p-4 h-100 rounded-4 border">
-                        <div class="icon-wrapper mb-4 mx-auto bg-primary bg-opacity-10 text-primary rounded-circle p-3"
+                        <div class="icon-wrapper mb-4 mx-auto bg-primary bg-opacity-10 text-primary rounded-circle p-3 d-flex align-items-center justify-content-center"
                             style="width: 80px; height: 80px;">
                             <i class="bi bi-geo-alt-fill fs-2"></i>
                         </div>
@@ -227,7 +227,7 @@
 
                 <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
                     <div class="feature-card text-center p-4 h-100 rounded-4 border">
-                        <div class="icon-wrapper mb-4 mx-auto bg-success bg-opacity-10 text-success rounded-circle p-3"
+                        <div class="icon-wrapper mb-4 mx-auto bg-success bg-opacity-10 text-success rounded-circle p-3 d-flex align-items-center justify-content-center"
                             style="width: 80px; height: 80px;">
                             <i class="bi bi-shop fs-2"></i>
                         </div>
@@ -238,7 +238,7 @@
 
                 <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
                     <div class="feature-card text-center p-4 h-100 rounded-4 border">
-                        <div class="icon-wrapper mb-4 mx-auto bg-warning bg-opacity-10 text-warning rounded-circle p-3"
+                        <div class="icon-wrapper mb-4 mx-auto bg-warning bg-opacity-10 text-warning rounded-circle p-3 d-flex align-items-center justify-content-center"
                             style="width: 80px; height: 80px;">
                             <i class="bi bi-info-circle-fill fs-2"></i>
                         </div>
@@ -268,10 +268,11 @@
     </div>
 
     @include('user.layouts.footer')
+@endsection
 
-
+@section('scripts')
     <!-- AOS Animation Library -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script>
         // Initialize AOS
         document.addEventListener('DOMContentLoaded', function() {

@@ -46,12 +46,19 @@
                             @endforeach
                         </select>
                         <small class="text-muted">Klik untuk memilih umpan</small>
-                        <!-- Ini akan menyimpan nilai multiple sebagai hidden input -->
                         <div id="hidden-umpan-container"></div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Rekomendasi Cuaca</label>
                         <textarea class="form-control" name="rekomendasi_cuaca" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Harga Parkir</label>
+                        <div class="input-group">
+                            <span class="input-group-text">Rp</span>
+                            <input type="number" class="form-control" name="harga_parkir" min="0" placeholder="Masukkan harga parkir (kosongkan jika gratis)">
+                        </div>
+                        <small class="text-muted">Isi dengan harga parkir (dalam Rupiah), kosongkan jika gratis</small>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Gambar (Bisa pilih lebih dari 1)</label>

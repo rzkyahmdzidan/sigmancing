@@ -103,6 +103,7 @@
                     <th>Koordinat</th>
                     <th>Jenis Ikan</th>
                     <th>Rekomendasi</th>
+                    <th>Harga Parkir</th>
                     <th>Status</th>
                     <th>Aksi</th>
                 </tr>
@@ -154,6 +155,16 @@
                             </div>
                         </td>
                         <td>
+                            <div class="parking-fee">
+                                <i class="fas fa-parking text-warning"></i>
+                                @if ($spot->harga_parkir)
+                                    <span>Rp {{ number_format((float) $spot->harga_parkir, 0, ',', '.') }}</span>
+                                @else
+                                    <span class="text-muted">Gratis</span>
+                                @endif
+                            </div>
+                        </td>
+                        <td>
                             <span class="badge {{ $spot->status ? 'bg-success' : 'bg-danger' }}">
                                 {{ $spot->status ? 'Aktif' : 'Tidak Aktif' }}
                             </span>
@@ -177,7 +188,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="9">
+                        <td colspan="10">
                             <div class="empty-state">
                                 <i class="fas fa-fish"></i>
                                 <h4>Tidak ada data spot</h4>

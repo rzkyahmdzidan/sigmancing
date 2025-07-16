@@ -36,6 +36,63 @@
                 display: block;
             }
         }
+
+        /* CSS untuk navbar yang bisa ditutup */
+        .navbar {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.hidden {
+            margin-top: -60px;
+        }
+
+        .content-wrapper {
+            transition: all 0.3s ease;
+            padding-top: 1rem;
+        }
+
+        .navbar.hidden+.content-wrapper {
+            padding-top: 0;
+        }
+
+        .navbar-toggle {
+            position: absolute;
+            bottom: -20px;
+            right: 20px;
+            width: 40px;
+            height: 20px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1030;
+        }
+
+        .show-navbar {
+            position: fixed;
+            top: 0;
+            right: 20px;
+            width: 40px;
+            height: 20px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1030;
+        }
+
+        .navbar.hidden~.show-navbar {
+            display: flex;
+        }
     </style>
     @yield('styles')
 </head>
@@ -43,46 +100,7 @@
 <body>
     <div class="admin-container">
         <!-- Sidebar -->
-        <div class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <i class="fas fa-fish"></i>
-                <h2>SigMancing</h2>
-                <button id="close-sidebar" class="btn d-md-none">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-
-            <nav class="mt-4">
-                <div class="nav-item">
-                    <a href="{{ route('admin.dashboard') }}"
-                        class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                        <i class="fas fa-home"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </div>
-                <div class="nav-item">
-                    <a href="{{ route('admin.spot.index') }}"
-                        class="nav-link {{ request()->routeIs('admin.spot.*') ? 'active' : '' }}">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span>Kelola Spot</span>
-                    </a>
-                </div>
-                <div class="nav-item">
-                    <a href="{{ route('admin.toko.index') }}"
-                        class="nav-link {{ request()->routeIs('admin.toko.*') ? 'active' : '' }}">
-                        <i class="fas fa-store"></i>
-                        <span>Kelola Toko</span>
-                    </a>
-                </div>
-                <div class="nav-item">
-                    <a href="{{ route('admin.umpan.index') }}"
-                        class="nav-link {{ request()->routeIs('admin.umpan.*') ? 'active' : '' }}">
-                        <i class="fas fa-worm"></i>
-                        <span>Rekomendasi Umpan</span>
-                    </a>
-                </div>
-            </nav>
-        </div>
+        @include('admin.layouts.sidebar')
 
         <!-- Sidebar Overlay -->
         <div class="sidebar-overlay" id="sidebar-overlay"></div>
@@ -90,48 +108,12 @@
         <!-- Main Content -->
         <div class="main-content">
             <!-- Navbar -->
-            <nav class="navbar">
-                <div class="d-flex align-items-center">
-                    <button id="sidebar-toggle" class="btn">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                    <h5 class="mb-0 ms-3 d-none d-sm-block">@yield('title', 'Dashboard')</h5>
-                </div>
-                <div class="user-profile">
-                    <div class="user-avatar">
-                        {{ substr(Auth::user()->name, 0, 2) }}
-                    </div>
-                    <div class="user-info">
-                        <div class="fw-bold">{{ Auth::user()->name }}</div>
-                        <form action="{{ route('logout') }}" method="POST" class="d-inline">
-                            @csrf
-                            <button type="submit" class="btn btn-link text-danger p-0 text-decoration-none">
-                                <small><i class="fas fa-sign-out-alt"></i> Logout</small>
-                            </button>
-                        </form>
-                    </div>
-                    <div class="dropdown d-sm-none">
-                        <button class="btn" type="button" id="userMenuDropdown" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            <i class="fas fa-ellipsis-v"></i>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenuDropdown">
-                            <li><span class="dropdown-item-text fw-bold">{{ Auth::user()->name }}</span></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li>
-                                <form action="{{ route('logout') }}" method="POST" class="d-inline w-100">
-                                    @csrf
-                                    <button type="submit" class="dropdown-item text-danger">
-                                        <i class="fas fa-sign-out-alt"></i> Logout
-                                    </button>
-                                </form>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
+            @include('admin.layouts.navbar')
+
+            <!-- Tombol untuk menampilkan navbar saat disembunyikan -->
+            <div class="show-navbar" id="show-navbar">
+                <i class="fas fa-chevron-down"></i>
+            </div>
 
             <!-- Content -->
             <div class="content-wrapper">
@@ -158,29 +140,52 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Sidebar toggle functionality
             const sidebar = document.getElementById('sidebar');
             const sidebarToggle = document.getElementById('sidebar-toggle');
             const closeSidebar = document.getElementById('close-sidebar');
             const sidebarOverlay = document.getElementById('sidebar-overlay');
-            const mainContent = document.querySelector('.main-content');
+            const navbar = document.querySelector('.navbar');
+            const navbarToggle = document.getElementById('navbar-toggle');
+            const showNavbar = document.getElementById('show-navbar');
 
-            function toggleSidebar() {
-                sidebar.classList.toggle('active');
-                sidebarOverlay.classList.toggle('active');
-                document.body.classList.toggle('sidebar-open');
-            }
-
+            // Sidebar toggle functionality
             if (sidebarToggle) {
-                sidebarToggle.addEventListener('click', toggleSidebar);
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('active');
+                    sidebarOverlay.classList.toggle('active');
+                    document.body.classList.toggle('sidebar-open');
+                });
             }
 
             if (closeSidebar) {
-                closeSidebar.addEventListener('click', toggleSidebar);
+                closeSidebar.addEventListener('click', function() {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                    document.body.classList.remove('sidebar-open');
+                });
             }
 
             if (sidebarOverlay) {
-                sidebarOverlay.addEventListener('click', toggleSidebar);
+                sidebarOverlay.addEventListener('click', function() {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                    document.body.classList.remove('sidebar-open');
+                });
+            }
+
+            // Navbar toggle functionality - Diperbaiki
+            if (navbarToggle) {
+                navbarToggle.addEventListener('click', function() {
+                    console.log('Navbar toggle clicked');
+                    navbar.classList.add('hidden');
+                });
+            }
+
+            if (showNavbar) {
+                showNavbar.addEventListener('click', function() {
+                    console.log('Show navbar clicked');
+                    navbar.classList.remove('hidden');
+                });
             }
 
             // Cek ukuran layar dan atur sidebar

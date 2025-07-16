@@ -44,6 +44,7 @@ class SpotController extends Controller
             'rekomendasi_umpan' => 'required|array',
             'rekomendasi_umpan.*' => 'exists:umpans,id',
             'rekomendasi_cuaca' => 'required',
+            'harga_parkir' => 'nullable|integer',
             'gambar.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'status' => 'required|boolean'
         ]);
@@ -70,19 +71,23 @@ class SpotController extends Controller
                 $umpanDetails[] = $umpan->nama;
             }
 
-            // PERBAIKAN: Pastikan text umpan tidak kosong
             $umpanText = !empty($umpanDetails) ? implode(", ", $umpanDetails) : "Tidak ada";
         } else {
-            // PERBAIKAN: Tambahkan nilai default jika tidak ada umpan yang dipilih
             $umpanText = "Tidak ada";
         }
 
         // Prepare spot data including rekomendasi_umpan
         $spotData = collect($validated)->except('rekomendasi_umpan')->toArray();
+
+        // Diperbaiki: Tetapkan default 0 untuk harga_parkir yang kosong
+        if (empty($spotData['harga_parkir'])) {
+            $spotData['harga_parkir'] = 0;
+        }
+
         $spotData['gambar'] = !empty($gambarNames) ? json_encode($gambarNames) : null;
         $spotData['rekomendasi_umpan'] = $umpanText; // Save as text in the column
 
-        // PERBAIKAN: Pastikan rekomendasi_cuaca tidak kosong
+        // Pastikan rekomendasi_cuaca tidak kosong
         if (empty($spotData['rekomendasi_cuaca'])) {
             $spotData['rekomendasi_cuaca'] = "Tidak ada";
         }
@@ -126,6 +131,7 @@ class SpotController extends Controller
             'rekomendasi_umpan' => 'required|array',
             'rekomendasi_umpan.*' => 'exists:umpans,id',
             'rekomendasi_cuaca' => 'required',
+            'harga_parkir' => 'nullable|integer',
             'gambar.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'existing_images' => 'nullable',
             'deleted_images' => 'nullable|array',
@@ -205,19 +211,23 @@ class SpotController extends Controller
                 $umpanDetails[] = $umpan->nama;
             }
 
-            // PERBAIKAN: Pastikan text umpan tidak kosong
             $umpanText = !empty($umpanDetails) ? implode(", ", $umpanDetails) : "Tidak ada";
         } else {
-            // PERBAIKAN: Tambahkan nilai default jika tidak ada umpan yang dipilih
             $umpanText = "Tidak ada";
         }
 
         // Persiapkan data spot untuk update
         $spotData = collect($validated)->except(['rekomendasi_umpan', 'existing_images', 'deleted_images'])->toArray();
+
+        // Diperbaiki: Tetapkan default 0 untuk harga_parkir yang kosong
+        if (empty($spotData['harga_parkir'])) {
+            $spotData['harga_parkir'] = 0;
+        }
+
         $spotData['gambar'] = !empty($gambarNames) ? json_encode($gambarNames) : null;
         $spotData['rekomendasi_umpan'] = $umpanText; // Simpan sebagai teks di kolom
 
-        // PERBAIKAN: Pastikan rekomendasi_cuaca tidak kosong
+        // Pastikan rekomendasi_cuaca tidak kosong
         if (empty($spotData['rekomendasi_cuaca'])) {
             $spotData['rekomendasi_cuaca'] = "Tidak ada";
         }

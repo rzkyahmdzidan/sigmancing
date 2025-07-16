@@ -143,8 +143,55 @@
             border-radius: 50%;
             margin-right: 5px;
         }
+
+        /* Tambahkan ke bagian style pada head */
+        .responsive-popup .leaflet-popup-content-wrapper {
+            max-width: 100%;
+        }
+
+        @media (max-width: 576px) {
+
+            .leaflet-control-layers,
+            .legend,
+            .map-type-control {
+                max-width: 150px !important;
+                font-size: 11px !important;
+            }
+
+            .leaflet-routing-container {
+                max-width: 270px !important;
+            }
+
+            .route-info-container {
+                padding: 8px !important;
+            }
+
+            .route-details {
+                font-size: 12px !important;
+            }
+        }
+
+        /* Tambahkan ini ke bagian style di head */
+        @media (max-width: 576px) {
+            .simple-carousel {
+                max-width: 100%;
+            }
+
+            .carousel-image {
+                height: 120px !important;
+            }
+
+            .leaflet-popup-content {
+                max-width: 100%;
+                min-width: auto !important;
+            }
+
+            .leaflet-popup {
+                max-width: 90vw;
+            }
+        }
     </style>
-</head> 
+</head>
 
 <body>
     <!-- Include Navbar -->
@@ -315,7 +362,6 @@
             map.invalidateSize();
         }, 100);
 
-        // Debug info
         console.log("Data spots dari server:");
         @foreach ($spots as $spot)
             console.log({
@@ -323,7 +369,8 @@
                 nama: "{{ $spot->nama_spot }}",
                 ikan: "{{ $spot->jenis_ikan }}",
                 umpan: "{{ $spot->rekomendasi_umpan }}",
-                cuaca: "{{ $spot->rekomendasi_cuaca }}"
+                cuaca: "{{ $spot->rekomendasi_cuaca }}",
+                harga_parkir: parseInt("{{ $spot->harga_parkir }}") || 0,
             });
         @endforeach
 
@@ -382,7 +429,6 @@
         }
 
         // Tambahkan legenda untuk warna marker
-        // Tambahkan legenda untuk warna marker
         function addMarkerLegend() {
             const legendControl = L.control({
                 position: 'bottomright'
@@ -406,29 +452,9 @@
                         color: 'green'
                     },
                     {
-                        name: 'Tenggiri',
+                        name: 'Ikan Belang',
                         color: 'blue'
                     },
-                    {
-                        name: 'Bawal',
-                        color: 'orange'
-                    },
-                    {
-                        name: 'Gurame',
-                        color: 'purple'
-                    },
-                    {
-                        name: 'Nila',
-                        color: 'darkgreen'
-                    },
-                    {
-                        name: 'Ikan Mas',
-                        color: 'gold'
-                    },
-                    {
-                        name: 'Lele',
-                        color: 'darkgrey'
-                    }
                 ];
 
                 div.innerHTML = '<h6 class="mb-2 fw-bold" style="font-size: 14px;">Potensi Ikan:</h6>';
@@ -485,10 +511,9 @@
             }
         }
 
-        // Modifikasi fungsi createPopupContent untuk menambahkan tombol rute
         // Modifikasi fungsi createPopupContent untuk tampilan yang lebih menarik
         function createPopupContent(spot, includeDistance = false) {
-            let content = '<div class="popup-content" style="min-width: 260px;">' +
+            let content = '<div class="popup-content" style="min-width: 260px; max-width: 100%;">' +
                 '<h5 style="font-size: 17px; font-weight: 700; color: #0d6efd; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 8px;">' +
                 spot.name + '</h5>';
 
@@ -502,6 +527,20 @@
             content += '<div style="margin-bottom: 8px; display: flex;">' +
                 `<i class="bi bi-water" style="color: ${fishColor}; min-width: 24px; font-size: 16px;"></i> ` +
                 '<span style="color: #333; font-size: 14px;">' + spot.fish + '</span></div>';
+
+            content += '<div style="margin-bottom: 8px; display: flex;">' +
+                '<i class="bi bi-car-front-fill" style="color: #6610f2; min-width: 24px; font-size: 16px;"></i> ' +
+                '<span style="color: #333; font-size: 14px;">Harga Parkir: ';
+
+            // Force convert ke number dan cek nilainya
+            const hargaParkir = Number(spot.harga_parkir);
+            if (hargaParkir > 0) {
+                content += 'Rp ' + new Intl.NumberFormat('id-ID').format(hargaParkir);
+            } else {
+                content += 'Gratis';
+            }
+
+            content += '</span></div>';
 
             // Informasi cocok untuk siapa
             if (spot.suitable) {
@@ -609,6 +648,7 @@
         // Fungsi untuk menampilkan rute ke spot memancing
         function showRouteTo(spot) {
             // Pastikan lokasi pengguna tersedia
+            // Pastikan lokasi pengguna tersedia
             if (userLat === null || userLng === null) {
                 alert("Silakan ambil lokasi Anda terlebih dahulu dengan klik tombol 'Ambil Lokasi Saya'");
                 return;
@@ -659,37 +699,37 @@
 
                 // Update informasi rute dengan desain yang lebih menarik
                 var routeInfoHtml = `
-        <div class="route-info-container p-3 bg-white rounded shadow-sm">
-            <div class="d-flex align-items-center mb-2">
-                <i class="bi bi-water text-primary me-2 fs-4"></i>
-                <h5 class="mb-0 fw-bold">${spot.name}</h5>
-            </div>
-            <div class="route-details bg-light p-2 rounded-3 my-2">
-                <div class="d-flex justify-content-between">
-                    <div class="text-center px-2">
-                        <i class="bi bi-rulers text-secondary"></i>
-                        <div class="fs-5 fw-bold text-primary">${distanceString}</div>
-                        <small class="text-muted">Jarak</small>
-                    </div>
-                    <div class="border-start"></div>
-                    <div class="text-center px-2">
-                        <i class="bi bi-stopwatch text-secondary"></i>
-                        <div class="fs-5 fw-bold text-primary">${timeString}</div>
-                        <small class="text-muted">Waktu</small>
-                    </div>
-                </div>
-            </div>
-            <p class="small text-muted mb-2">Lokasi: ${spot.location}</p>
-            <div class="d-flex gap-2">
-                <button class="btn btn-primary rounded-pill w-100" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${spot.lat},${spot.lng}', '_blank')">
-                    <i class="bi bi-google me-1"></i> Google Maps
-                </button>
-                <button class="btn btn-outline-danger rounded-pill" onclick="clearRoute()">
-                    <i class="bi bi-x-lg"></i>
-                </button>
-            </div>
-        </div>
-        `;
+       <div class="route-info-container p-3 bg-white rounded shadow-sm">
+           <div class="d-flex align-items-center mb-2">
+               <i class="bi bi-water text-primary me-2 fs-4"></i>
+               <h5 class="mb-0 fw-bold">${spot.name}</h5>
+           </div>
+           <div class="route-details bg-light p-2 rounded-3 my-2">
+               <div class="d-flex justify-content-between">
+                   <div class="text-center px-2">
+                       <i class="bi bi-rulers text-secondary"></i>
+                       <div class="fs-5 fw-bold text-primary">${distanceString}</div>
+                       <small class="text-muted">Jarak</small>
+                   </div>
+                   <div class="border-start"></div>
+                   <div class="text-center px-2">
+                       <i class="bi bi-stopwatch text-secondary"></i>
+                       <div class="fs-5 fw-bold text-primary">${timeString}</div>
+                       <small class="text-muted">Waktu</small>
+                   </div>
+               </div>
+           </div>
+           <p class="small text-muted mb-2">Lokasi: ${spot.location}</p>
+           <div class="d-flex gap-2">
+               <button class="btn btn-primary rounded-pill w-100" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${spot.lat},${spot.lng}', '_blank')">
+                   <i class="bi bi-google me-1"></i> Google Maps
+               </button>
+               <button class="btn btn-outline-danger rounded-pill" onclick="clearRoute()">
+                   <i class="bi bi-x-lg"></i>
+               </button>
+           </div>
+       </div>
+       `;
 
                 // Tambahkan ke dalam container routing dengan delay
                 setTimeout(function() {
@@ -708,6 +748,7 @@
         }
 
         // Function untuk memperbarui semua popup dengan informasi jarak
+        // Function untuk memperbarui semua popup dengan informasi jarak
         function updateAllPopupsWithDistance() {
             if (userLat === null || userLng === null) return;
 
@@ -725,6 +766,7 @@
                             lng: {{ $spot->longitude }},
                             bait: "{{ trim($spot->rekomendasi_umpan) }}",
                             weather: "{{ trim($spot->rekomendasi_cuaca) }}",
+                            harga_parkir: parseInt("{{ $spot->harga_parkir }}"),
                             @if ($spot->gambar)
                                 <?php
                                 $gambarArray = json_decode($spot->gambar, true);
@@ -773,13 +815,14 @@
                         lng: {{ $spot->longitude }},
                         bait: "{{ $spot->rekomendasi_umpan }}",
                         weather: "{{ $spot->rekomendasi_cuaca }}",
+                        harga_parkir: {{ $spot->harga_parkir ?: 0 }},
                         @if ($spot->gambar)
                             <?php
                             $gambarArray = json_decode($spot->gambar, true);
                             $gambarArray = is_array($gambarArray) ? $gambarArray : [];
                             ?>
                             @if (count($gambarArray) > 0)
-                                image: "{{ asset('images/spots/' . $gambarArray[0]) }}",
+                                image: "{{ asset(path: 'images/spots/' . $gambarArray[0]) }}",
                                 images: [
                                     @foreach ($gambarArray as $img)
                                         "{{ asset('images/spots/' . $img) }}",
@@ -799,12 +842,30 @@
 
                     // Gunakan custom marker berdasarkan jenis ikan
                     var marker = L.marker([spotData.lat, spotData.lng], {
-                        icon: createCustomMarker(spotData
-                            .fish) // Gunakan custom marker dengan warna sesuai jenis ikan
+                        icon: createCustomMarker(spotData.fish)
                     }).bindPopup(initialPopupContent, {
-                        minWidth: 250,
-                        maxWidth: 300
+                        minWidth: 200,
+                        maxWidth: window.innerWidth < 576 ? 250 : 300,
+                        className: 'responsive-popup'
                     });
+
+                    function adjustPopupSize() {
+                        const width = window.innerWidth;
+                        const popups = document.querySelectorAll('.leaflet-popup-content');
+
+                        popups.forEach(popup => {
+                            if (width < 576) {
+                                popup.style.maxWidth = '100%';
+                                popup.style.width = 'auto';
+                                popup.style.minWidth = '200px';
+                            } else {
+                                popup.style.minWidth = '260px';
+                                popup.style.maxWidth = '300px';
+                            }
+                        });
+                    }
+
+                    window.addEventListener('resize', adjustPopupSize);
 
                     marker.addTo(map);
                     spotMarkers.push(marker);
@@ -813,6 +874,7 @@
                     marker.on('popupopen', function() {
                         setTimeout(function() {
                             setupCarousel();
+                            adjustPopupSize();
 
                             const routeBtn = document.querySelector('.leaflet-popup-content button');
                             if (routeBtn) {
@@ -1057,15 +1119,15 @@
             const notification = document.createElement('div');
             notification.className = 'notification ' + type;
             notification.innerHTML = `
-                <div class="alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show shadow-sm" role="alert"
-                     style="position: fixed; top: 20px; right: 20px; z-index: 9999; min-width: 300px; border-radius: 10px;">
-                    <div class="d-flex align-items-center">
-                        <i class="bi bi-${type === 'success' ? 'check-circle' : 'exclamation-circle'}-fill me-2 fs-4"></i>
-                        <div>${message}</div>
-                    </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            `;
+               <div class="alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show shadow-sm" role="alert"
+                    style="position: fixed; top: 20px; right: 20px; z-index: 9999; min-width: 300px; border-radius: 10px;">
+                   <div class="d-flex align-items-center">
+                       <i class="bi bi-${type === 'success' ? 'check-circle' : 'exclamation-circle'}-fill me-2 fs-4"></i>
+                       <div>${message}</div>
+                   </div>
+                   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+               </div>
+           `;
 
             // Tambahkan ke body
             document.body.appendChild(notification);

@@ -120,7 +120,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="col-md-6">
                             <label class="form-label small text-muted">Cuaca</label>
                             <div class="input-group mb-2">
@@ -133,7 +132,17 @@
                                 <i class="fas fa-exclamation-circle"></i> Rekomendasi cuaca harus diisi
                             </div>
                         </div>
-
+                        <!-- Harga Parkir -->
+                        <div class="col-md-6">
+                            <label class="form-label small text-muted">Harga Parkir</label>
+                            <div class="input-group mb-2">
+                                <span class="input-group-text bg-warning text-white"><i
+                                        class="fas fa-parking"></i></span>
+                                <input type="number" class="form-control bg-light" id="edit_harga_parkir"
+                                    name="harga_parkir" placeholder="Masukkan harga parkir" min="0">
+                            </div>
+                            <div class="form-text"><i class="fas fa-info-circle"></i> Kosongkan jika gratis</div>
+                        </div>
                         <!-- Deskripsi -->
                         <div class="col-12">
                             <label class="form-label small text-muted">Deskripsi</label>
@@ -531,6 +540,7 @@
                 document.getElementById('edit_longitude').value = data.longitude;
                 document.getElementById('edit_jenis_ikan').value = data.jenis_ikan;
                 document.getElementById('edit_rekomendasi_cuaca').value = data.rekomendasi_cuaca;
+                document.getElementById('edit_harga_parkir').value = data.harga_parkir || '';
                 document.getElementById('edit_deskripsi').value = data.deskripsi;
                 document.getElementById('edit_status').value = data.status ? '1' : '0';
 

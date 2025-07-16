@@ -36,17 +36,35 @@
         footer {
             flex-shrink: 0;
         }
+
+        /* Wrapper untuk membatasi lebar konten */
+        .content-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+            width: 100%;
+        }
+
+        /* Untuk halaman dengan background penuh tapi konten terbatas */
+        .full-width-section {
+            width: 100%;
+        }
+
+        .full-width-section .content-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+            width: 100%;
+        }
     </style>
     @yield('styles')
 </head>
 
 <body>
-
     <!-- Main Content -->
     <main>
         @yield('content')
     </main>
-
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

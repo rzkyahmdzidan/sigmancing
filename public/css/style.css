@@ -781,6 +781,117 @@ footer .row.text-center.text-md-start {
     /* Warna latar belakang saat hover */
 }
 
+
+/* Tambahkan class baru ini ke file CSS Anda */
+
+
+/* Class untuk membatasi lebar konten */
+
+.content-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+    width: 100%;
+}
+
+
+/* Untuk section dengan background penuh tapi konten terbatas */
+
+.full-width-section {
+    width: 100%;
+}
+
+.full-width-section .content-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+    width: 100%;
+}
+
+
+/* Perbaikan untuk hero section */
+
+.hero-section {
+    background-color: #ffffff;
+    padding: 2rem 0;
+    margin-bottom: 30px;
+}
+
+.hero-section .content-wrapper {
+    max-width: 900px;
+    padding: 0 20px;
+}
+
+.hero-title {
+    font-weight: 700;
+    font-size: 2.2rem;
+    color: #212529;
+    margin-bottom: 0.5rem;
+}
+
+.hero-subtitle {
+    font-size: 1.1rem;
+    color: #495057;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+
+/* Perbaikan untuk halaman spot informasi */
+
+.spot-info-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 15px;
+}
+
+.spot-info-header {
+    max-width: 800px;
+    margin: 0 auto 30px;
+    text-align: center;
+}
+
+
+/* Perbaikan untuk container pada halaman home */
+
+.home-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.home-hero {
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.main-info-layout {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+
+/* Responsif untuk layout */
+
+@media (max-width: 992px) {
+    .content-wrapper,
+    .hero-section .content-wrapper,
+    .spot-info-page,
+    .home-container {
+        max-width: 100%;
+        padding: 0 20px;
+    }
+    .hero-title {
+        font-size: 1.8rem;
+    }
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+}
+
 @media (max-width: 768px) {
     .hero {
         flex-direction: column-reverse;

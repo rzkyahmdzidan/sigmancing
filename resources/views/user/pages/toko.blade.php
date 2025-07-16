@@ -115,13 +115,11 @@
     @include('user.layouts.navbar')
 
     <!-- Hero Section -->
-    <div class="hero-section"
-        style="background: #ffffff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-bottom: 1px solid #eee;">
+    <div class="hero-section" style="background: #ffffff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-bottom: 1px solid #eee;">
         <div class="container text-center" data-aos="fade-down">
             <i class="bi bi-compass fishing-icon text-primary"></i>
             <h1 class="hero-title text-dark">Peta Toko Pancing</h1>
-            <p class="hero-subtitle text-dark">Temukan toko pancing terbaik di sekitar Anda dengan informasi lengkap dan
-                petunjuk arah.</p>
+            <p class="hero-subtitle text-dark">Temukan toko pancing terbaik di sekitar Anda dengan informasi lengkap dan petunjuk arah.</p>
         </div>
     </div>
 
@@ -195,8 +193,7 @@
                             </div>
                             <div>
                                 <h6 class="fw-bold">Gunakan Fitur Lokasi</h6>
-                                <p class="small text-muted">Aktifkan lokasi Anda untuk mendapatkan rekomendasi toko
-                                    pancing terdekat.</p>
+                                <p class="small text-muted">Aktifkan lokasi Anda untuk mendapatkan rekomendasi toko pancing terdekat.</p>
                             </div>
                         </div>
                     </div>
@@ -207,8 +204,7 @@
                             </div>
                             <div>
                                 <h6 class="fw-bold">Dapatkan Rute</h6>
-                                <p class="small text-muted">Klik pada toko untuk mendapatkan petunjuk arah menuju
-                                    lokasi.</p>
+                                <p class="small text-muted">Klik pada toko untuk mendapatkan petunjuk arah menuju lokasi.</p>
                             </div>
                         </div>
                     </div>
@@ -241,7 +237,6 @@
         var userLat = null; // Variabel untuk menyimpan latitude pengguna
         var userLng = null; // Variabel untuk menyimpan longitude pengguna
         var routingControl;
-
 
         // Definisikan base layers
         var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -622,7 +617,7 @@
                             $gambarArray = is_array($gambarArray) ? $gambarArray : [];
                             ?>
                             @if (count($gambarArray) > 0)
-                                image: "{{ asset('images/toko/' . $gambarArray[0]) }}",
+                                image:"{{ asset('images/toko/' . $gambarArray[0]) }}",
                                 images: [
                                     @foreach ($gambarArray as $img)
                                         "{{ asset('images/toko/' . $img) }}",
